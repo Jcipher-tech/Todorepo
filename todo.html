@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>To-Do — DesoStyle</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-todo">
+  <div class="shape s1"></div>
+  <div class="shape s2"></div>
+
+  <header class="nav container">
+    <div class="brand"><a href="index.html">DesoStyle</a></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="ai.html">AI</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+    <div class="right">
+      <span id="userBadge" class="muted"></span>
+      <a class="btn ghost" id="logoutBtn">Logout</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="row-between">
+        <h2>Tasks</h2>
+        <div class="muted" id="xpDisplay">XP: 0 • Level: 1</div>
+      </div>
+
+      <div class="row" style="gap:12px;margin-top:12px">
+        <input id="taskTitle" placeholder="Task title (required)">
+        <select id="priority">
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="low">Low</option>
+        </select>
+        <button class="btn" id="addTaskBtn">Add</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+        <input id="filterQ" placeholder="Search tasks..." />
+        <select id="filterStatus">
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+        </select>
+        <select id="sortBy">
+          <option value="created">Newest</option>
+          <option value="priority">Priority</option>
+        </select>
+      </div>
+
+      <ul id="taskList" class="task-list"></ul>
+
+      <div class="row-between" style="margin-top:14px;">
+        <div class="muted">Tip: complete tasks for XP and prizes!</div>
+        <div>
+          <button class="btn ghost" id="clearAllBtn">Clear All</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="confetti-canvas" class="confetti"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
