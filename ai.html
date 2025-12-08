@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Chatbot — DesoStyle</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-ai">
+  <div class="shape s1"></div>
+  <div class="shape s2"></div>
+
+  <header class="nav container">
+    <div class="brand"><a href="index.html">DesoStyle</a></div>
+    <nav>
+      <a href="todo.html">To-Do</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+    <div class="right">
+      <a class="btn ghost" href="login.html">Login</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>AI Chatbot</h2>
+      <div class="muted">A helpful assistant for task planning. This demo has a smart local bot and optional serverless AI integration.</div>
+
+      <div id="chat" style="margin-top:12px;">
+        <div id="messages" class="messages"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <input id="chatInput" placeholder="Ask the assistant to create tasks or tips..." />
+          <button class="btn" id="sendBtn">Send</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn ghost" id="aiServerBtn">Use Server AI (optional)</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
