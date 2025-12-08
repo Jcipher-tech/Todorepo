@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — DesoStyle</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-login">
+  <div class="shape s1"></div>
+  <div class="shape s2"></div>
+
+  <header class="nav container">
+    <div class="brand"><a href="index.html">DesoStyle</a></div>
+    <div class="right">
+      <a class="btn ghost" href="index.html">Home</a>
+    </div>
+  </header>
+
+  <main class="container center-card">
+    <div class="card login-card">
+      <h2>Welcome back</h2>
+      <p class="muted">Sign in to sync progress locally (for demo).</p>
+
+      <input id="loginName" placeholder="Enter a username (no password required)"/>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button class="btn" id="btnLogin">Login</button>
+        <button class="btn ghost" id="btnGuest">Continue as Guest</button>
+      </div>
+      <p class="muted" style="margin-top:12px">Tip: Use same username across devices to reuse localStorage on this machine.</p>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
