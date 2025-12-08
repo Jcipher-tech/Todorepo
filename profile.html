@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile — DesoStyle</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-profile">
+  <div class="shape s1"></div>
+  <div class="shape s2"></div>
+
+  <header class="nav container">
+    <div class="brand"><a href="index.html">DesoStyle</a></div>
+    <nav>
+      <a href="todo.html">To-Do</a>
+      <a href="ai.html">AI</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <div class="right">
+      <a class="btn ghost" href="login.html">Login</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Profile</h2>
+      <div class="muted">User data stored locally (for demo). Use cloud provider for persistence.</div>
+
+      <div style="margin-top:12px">
+        <div><strong>Username:</strong> <span id="profileUser">Guest</span></div>
+        <div><strong>XP:</strong> <span id="profileXP">0</span></div>
+        <div><strong>Level:</strong> <span id="profileLevel">1</span></div>
+        <div style="margin-top:12px">
+          <button class="btn" id="resetProgress">Reset Progress</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
