@@ -1,229 +1,744 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Premium To-Do App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DesoStyle — Premium To-Do WebApp</title>
+<link rel="icon" href="data:,">
 <style>
-body {
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    background: #020202;
-    color: white;
-    overflow-x: hidden;
+/* =========================
+   DESO-style Premium SPA CSS
+   ========================= */
+
+:root{
+  --bg1: #05060a; --bg2:#081026;
+  --accent1: #7c3aed; --accent2:#06b6d4;
+  --muted: #9aa3b2; --glass: rgba(255,255,255,0.03);
+  --radius: 14px;
+  --card-shadow: 0 20px 48px rgba(2,6,23,0.6);
 }
 
-/* Floating gradient shapes */
-.shape {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(135deg, #7928ff, #ff2bd8);
-    filter: blur(120px);
-    opacity: 0.4;
-    animation: float 12s infinite alternate;
-}
-#shape1 { top: -80px; left: -50px; }
-#shape2 { bottom: -80px; right: -50px; animation-delay: 3s; }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
 
-@keyframes float {
-    from { transform: translateY(0) scale(1); }
-    to { transform: translateY(40px) scale(1.1); }
+/* layout */
+.app {
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  min-height:100vh;
+  gap:20px;
+  padding:28px;
+  align-items:start;
 }
 
-/* Main container */
-.container {
-    width: 90%;
-    max-width: 420px;
-    margin: 120px auto;
-    padding: 25px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 0 20px rgba(141,0,255,0.5);
-    animation: fadeIn 0.7s ease;
+/* Floating shapes / blob */
+.blob {
+  position:fixed;
+  left:-120px;
+  top:-80px;
+  width:520px;
+  height:520px;
+  background: radial-gradient(circle at 20% 20%, rgba(124,58,237,0.9), transparent 40%);
+  filter: blur(60px);
+  border-radius:45% 55% 50% 50% / 45% 50% 50% 55%;
+  z-index:0;
+  animation: blobFloat 16s ease-in-out infinite;
+  mix-blend-mode: screen;
 }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } }
+@keyframes blobFloat { 0% { transform: translateY(0) } 50% { transform: translateY(-28px) rotate(4deg) } 100% { transform: translateY(0) } }
 
-h1 {
-    text-align: center;
-    font-size: 32px;
-    background: linear-gradient(90deg, #c084fc, #22d3ee);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.blob2 {
+  position:fixed;
+  right:-120px; bottom:-120px;
+  width:420px;height:420px;background: radial-gradient(circle at 80% 80%, rgba(6,182,212,0.85), transparent 40%);
+  border-radius:50%;
+  filter: blur(56px); z-index:0; animation: blobFloat2 14s ease-in-out infinite; mix-blend-mode: screen;
 }
+@keyframes blobFloat2 { 0%{transform:translateY(0)}50%{transform:translateY(22px) rotate(-4deg)}100%{transform:translateY(0)} }
 
-/* Input area */
-.inputRow {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
+/* sidebar */
+.sidebar {
+  position:sticky; top:28px; align-self:start; z-index:2;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow);
+  height:calc(100vh - 56px); overflow:auto;
 }
-input {
-    flex: 1;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-}
-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: linear-gradient(135deg, #9333ea, #3b82f6);
-    color: white;
-    transition: 0.3s ease;
-    font-size: 18px;
-}
-button:hover { transform: scale(1.07); }
+.brand { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.logo { width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2)); box-shadow:0 10px 30px rgba(7,12,29,0.4) }
+.brand h3{ margin:0 ; font-size:16px }
+.nav { display:flex; flex-direction:column; gap:6px; margin-top:12px }
+.nav a { padding:10px;border-radius:8px;color:#dfe9ff; display:flex; align-items:center; gap:10px; font-weight:600 }
+.nav a.active { background: linear-gradient(90deg, rgba(124,58,237,0.12), rgba(6,182,212,0.06)); box-shadow: 0 8px 20px rgba(2,6,23,0.5) }
 
-/* Task List */
-ul { padding: 0; margin-top: 10px; }
-li {
-    background: rgba(255,255,255,0.09);
-    list-style-type: none;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    animation: slideIn 0.3s ease;
-}
-@keyframes slideIn { from {opacity: 0; transform: translateX(20px);} }
+/* header quick info */
+.userCard { margin-top:14px; padding:10px; border-radius:10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03) }
+.userCard .muted{ color:var(--muted); font-size:13px }
 
-li.completed {
-    text-decoration: line-through;
-    opacity: 0.6;
+/* content area */
+.content {
+  position:relative; z-index:2; padding:8px;
 }
 
-.deleteBtn {
-    background: #ef4444;
-    padding: 8px 13px;
-    border-radius: 8px;
-    color: white;
-    border: none;
-    cursor: pointer;
+/* page card */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  padding:18px; border-radius:12px; margin-bottom:18px; border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow);
+  animation: fadeUp .45s ease both;
 }
+@keyframes fadeUp { from { opacity:0; transform: translateY(8px) } to { opacity:1; transform:none } }
 
-#reward {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #4ade80;
-    padding: 12px 20px;
-    color: black;
-    border-radius: 10px;
-    font-weight: bold;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: 0.4s ease;
+/* layout: dashboard grid */
+.dashboard-grid { display:grid; grid-template-columns: 1fr 360px; gap:18px }
+
+/* interactivity */
+.controls { display:flex; gap:8px; align-items:center; margin-top:12px }
+.btn { background:linear-gradient(90deg,var(--accent1),var(--accent2)); padding:8px 12px; border-radius:10px; color:white; border:0; cursor:pointer; font-weight:700 }
+.btn.ghost { background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted); font-weight:600 }
+
+/* Tasks */
+.tasksList { display:flex; flex-direction:column; gap:12px; max-height:56vh; overflow:auto; padding-right:6px }
+.taskItem { display:grid; grid-template-columns: 84px 1fr 120px; gap:12px; align-items:center; padding:12px; border-radius:10px; background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02) }
+.taskTitle { font-weight:700; font-size:15px }
+.taskMeta { color:var(--muted); font-size:13px }
+
+/* progress ring container */
+.progress-ring { width:64px; height:64px; display:grid; place-items:center }
+
+/* small */
+.small { font-size:13px; color:var(--muted) }
+
+/* chat overlay */
+.chatOverlay { position:fixed; right:26px; bottom:26px; width:340px; max-width:90vw; background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); z-index:999; display:none }
+.chatHeader { display:flex; justify-content:space-between; align-items:center }
+.chatMessages { max-height:260px; overflow:auto; margin-top:8px; padding:8px; background: rgba(0,0,0,0.12); border-radius:8px }
+.chatInputRow { display:flex; gap:8px; margin-top:8px }
+
+/* confetti */
+.confetti { position:fixed; inset:0; pointer-events:none; z-index:9999 }
+
+/* responsive */
+@media (max-width:1000px){
+  .app { grid-template-columns: 1fr; padding:18px }
+  .sidebar { display:none }
+  .dashboard-grid { grid-template-columns: 1fr }
+  .blob { display:none }
 }
 </style>
 </head>
-
 <body>
 
 <!-- Floating shapes -->
-<div id="shape1" class="shape"></div>
-<div id="shape2" class="shape"></div>
+<div class="blob" aria-hidden="true"></div>
+<div class="blob2" aria-hidden="true"></div>
 
-<div class="container">
-    <h1>My To-Do List</h1>
+<div class="app" role="application" aria-label="DesoStyle ToDo App">
 
-    <div class="inputRow">
-        <input type="text" id="taskInput" placeholder="Add a task...">
-        <button id="addBtn">+</button>
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Sidebar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h3>DesoStyle</h3>
+        <div class="small muted">Premium Productivity</div>
+      </div>
     </div>
 
-    <ul id="taskList"></ul>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#dashboard" data-route class="active">🏠 Dashboard</a>
+      <a href="#tasks" data-route>📝 Tasks</a>
+      <a href="#ai" data-route>🤖 AI</a>
+      <a href="#alarm" data-route>⏰ Alarm</a>
+      <a href="#rewards" data-route>🏅 Rewards</a>
+      <a href="#profile" data-route>👤 Profile</a>
+    </nav>
+
+    <div class="userCard" style="margin-top:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:grid;place-items:center;font-weight:800">DS</div>
+        <div>
+          <div id="uiUser" style="font-weight:700">Guest</div>
+          <div class="small muted">Local profile</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px;">
+        <button id="btnSign" class="btn ghost">Sign in</button>
+        <button id="btnQuick" class="btn">Quick Add</button>
+      </div>
+    </div>
+
+    <div style="margin-top:18px" class="small muted">Tip: Use the AI assistant to generate tasks quickly.</div>
+
+  </aside>
+
+  <!-- Main content -->
+  <main class="content" id="mainContent">
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="card view" role="region" aria-labelledby="dashTitle">
+      <h2 id="dashTitle">Welcome</h2>
+      <div class="small muted">Overview & quick access</div>
+
+      <div class="dashboard-grid" style="margin-top:12px">
+        <div>
+          <div class="card">
+            <h3 style="margin:0">Today</h3>
+            <div class="small muted" style="margin-top:6px">Tasks progress & quick actions</div>
+            <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+              <button class="btn" data-route="#tasks">Open Tasks</button>
+              <button class="btn ghost" id="btnOpenAI">Open AI</button>
+              <div class="small muted right">Streak: <span id="streak">0</span> days</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <h3 style="margin:0">Quick Add</h3>
+            <div style="margin-top:8px;display:flex;gap:8px">
+              <input id="quickTitle" class="small" placeholder="Task title" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit">
+              <button class="btn" id="quickAddBtn">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="card">
+            <h4 style="margin:0">Stats</h4>
+            <div style="margin-top:8px" class="small muted">XP & level</div>
+            <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+              <div style="width:64px;height:64px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:grid;place-items:center;font-weight:800">XP</div>
+              <div>
+                <div style="font-weight:700;font-size:20px" id="statXP">0</div>
+                <div class="small muted">Level <span id="statLevel">1</span></div>
+                <div style="height:8px;background:rgba(255,255,255,0.03);margin-top:8px;border-radius:999px">
+                  <div id="statBar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:999px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <h4 style="margin:0">Daily Quote</h4>
+            <div class="small muted" style="margin-top:8px" id="quote">Plan your work and work your plan.</div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- Tasks -->
+    <section id="tasks" class="card view" style="display:none" aria-labelledby="tasksTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h2 id="tasksTitle">Tasks</h2>
+          <div class="small muted">Add, edit, manage tasks</div>
+        </div>
+        <div class="small muted">XP: <span id="xpLabel">0</span></div>
+      </div>
+
+      <div style="margin-top:12px" class="card">
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="taskInput" placeholder="Task title" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit">
+          <select id="priority" style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent">
+            <option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option>
+          </select>
+          <button id="addTask" class="btn">Add Task</button>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+          <input id="search" placeholder="Search tasks..." style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent">
+          <select id="filter" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent">
+            <option value="all">All</option><option value="pending">Pending</option><option value="completed">Completed</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="tasksList" id="tasksList" style="margin-top:12px"></div>
+    </section>
+
+    <!-- AI -->
+    <section id="ai" class="card view" style="display:none">
+      <h2>AI Assistant</h2>
+      <div class="small muted" style="margin-top:6px">Ask the assistant to generate tasks or plan a study schedule.</div>
+
+      <div style="margin-top:10px">
+        <div class="chatInputRow">
+          <input id="aiInput" placeholder='e.g. "Create 5 tasks to learn SQL"' style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent">
+          <button id="aiAsk" class="btn">Ask</button>
+        </div>
+        <div id="aiOutput" style="margin-top:10px" class="small muted"></div>
+      </div>
+    </section>
+
+    <!-- Alarm -->
+    <section id="alarm" class="card view" style="display:none">
+      <h2>Alarm</h2>
+      <div class="small muted" style="margin-top:6px">Set an alarm and choose YouTube music (or upload an audio file).</div>
+
+      <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+        <input id="alarmTime" type="time" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent">
+        <select id="alarmLang" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent">
+          <option value="Hindi song">Hindi</option><option value="Marathi song">Marathi</option><option value="English pop song">English</option>
+        </select>
+        <button id="setAlarmBtn" class="btn">Set Alarm</button>
+      </div>
+
+      <div style="margin-top:10px" class="small muted">
+        Or upload an mp3 to play when alarm rings:
+        <input id="uploadAudio" type="file" accept="audio/*" style="margin-top:8px">
+      </div>
+
+      <div id="alarmsArea" style="margin-top:12px"></div>
+    </section>
+
+    <!-- Rewards -->
+    <section id="rewards" class="card view" style="display:none">
+      <h2>Rewards & Badges</h2>
+      <div class="small muted" style="margin-top:6px">Earn XP, unlock badges and collect achievements.</div>
+      <div id="badgesArea" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"></div>
+    </section>
+
+    <!-- Profile -->
+    <section id="profile" class="card view" style="display:none">
+      <h2>Profile</h2>
+      <div class="small muted" style="margin-top:6px">Local profile & progress</div>
+      <div style="margin-top:12px">
+        <div><strong>Username:</strong> <span id="profileName">Guest</span></div>
+        <div style="margin-top:6px"><strong>XP:</strong> <span id="profileXP">0</span></div>
+        <div style="margin-top:6px"><strong>Streak:</strong> <span id="profileStreak">0</span> days</div>
+        <div style="margin-top:12px"><button id="resetBtn" class="btn ghost">Reset Data</button></div>
+      </div>
+    </section>
+
+  </main>
 </div>
 
-<div id="reward">🎉 Task Completed!</div>
+<!-- Chat overlay (small) -->
+<div class="chatOverlay" id="chatOverlay" role="dialog" aria-hidden="true">
+  <div class="chatHeader">
+    <div style="font-weight:700">Assistant</div>
+    <div><button id="closeChat" class="btn ghost">Close</button></div>
+  </div>
+  <div class="chatMessages" id="chatMessages" aria-live="polite"></div>
+  <div class="chatInputRow">
+    <input id="chatText" placeholder="Ask something..." style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent">
+    <button id="chatSend" class="btn">Send</button>
+  </div>
+</div>
+
+<!-- Confetti layer -->
+<div class="confetti" id="confetti"></div>
 
 <script>
-/* MAIN FIX: Ensure event listener works */
-document.getElementById("addBtn").addEventListener("click", addTask);
+/* =========================
+   Premium To-Do SPA JS
+   ========================= */
 
-/* Enable Enter key */
-document.getElementById("taskInput").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") addTask();
+/* --- Utilities --- */
+const _$ = sel => document.querySelector(sel);
+const _$$ = sel => Array.from(document.querySelectorAll(sel));
+const uid = (p='id_') => p + Math.random().toString(36).slice(2,9);
+const nowISO = () => new Date().toISOString();
+const AUTH_KEY = 'ds_current_user_v2';
+const STORAGE_PREFIX = (u) => `ds_v2_${u}`;
+
+/* --- Simple auth prompt (local) --- */
+function ensureUser(){
+  let u = localStorage.getItem(AUTH_KEY);
+  if(!u){
+    u = prompt('Enter username (local):','Guest') || 'Guest';
+    localStorage.setItem(AUTH_KEY, u);
+  }
+  return u;
+}
+let currentUser = ensureUser();
+_$('#uiUser').textContent = currentUser;
+_$('#profileName').textContent = currentUser;
+
+/* --- Per-user state helpers --- */
+function loadState(){
+  const raw = localStorage.getItem(STORAGE_PREFIX(currentUser));
+  return raw ? JSON.parse(raw) : { xp:0, streak:0, lastActive:null, tasks:[], alarms:[], badges:[] };
+}
+function saveState(s){ localStorage.setItem(STORAGE_PREFIX(currentUser), JSON.stringify(s)); }
+
+/* initial state */
+let state = loadState();
+
+/* update XP UI */
+function updateXPUI(){
+  _$('#statXP').textContent = state.xp || 0;
+  const level = Math.floor((state.xp || 0) / 50) + 1;
+  _$('#statLevel').textContent = level;
+  _$('#xpLabel').textContent = state.xp || 0;
+  const pct = ((state.xp||0) % 50) / 50 * 100;
+  _$('#statBar').style.width = pct + '%';
+  _$('#profileXP').textContent = state.xp || 0;
+}
+
+/* quote */
+const QUOTES = ["Plan your work and work your plan.","Small progress is still progress.","Consistency beats intensity.","Finish one thing well today."];
+_$('#quote').textContent = QUOTES[new Date().getDate() % QUOTES.length];
+
+/* navigation (hash) */
+const routes = _$$('[data-route]');
+routes.forEach(a => a.addEventListener('click', (e)=>{
+  e.preventDefault();
+  const h = a.getAttribute('href');
+  location.hash = h;
+  route();
+}));
+
+function route(){
+  const hash = location.hash || '#dashboard';
+  _$$('.view').forEach(v => v.style.display = 'none');
+  const target = _$(hash);
+  if(target) target.style.display = 'block';
+  _$$('.nav a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === hash));
+}
+window.addEventListener('hashchange', route);
+if(!location.hash) location.hash = '#dashboard';
+route();
+
+/* --- Tasks: add / render / edit / delete / complete --- */
+_$('#addTask').addEventListener('click', ()=> {
+  const title = _$('#taskInput').value.trim();
+  if(!title) return alert('Task title required');
+  const t = { id: uid('t_'), title, notes:'', createdAt: nowISO(), subtasks:[], manualPercent:null, completed:false, priority:_$('#priority').value };
+  state.tasks.unshift(t);
+  saveState(state); renderTasks(); _$('#taskInput').value = '';
+  awardXP(1); // small xp for adding
+});
+_$('#quickAddBtn').addEventListener('click', ()=> {
+  const t = _$('#quickTitle').value.trim();
+  if(!t) return alert('Quick title required');
+  const obj = { id: uid('t_'), title:t, createdAt:nowISO(), subtasks:[], completed:false, priority:'medium' };
+  state.tasks.unshift(obj);
+  saveState(state); renderTasks(); _$('#quickTitle').value = '';
 });
 
-/* Add Task */
-function addTask() {
-    const input = document.getElementById("taskInput");
-    const text = input.value.trim();
+/* search / filter */
+_$('#search').addEventListener('input', debounce(renderTasks,220));
+_$('#filter').addEventListener('change', renderTasks);
 
-    if (!text) return; // ignore empty tasks
-
-    createTask(text);
-    saveTasks();
-    input.value = "";
+/* render tasks */
+function computePercent(task){
+  if(task.manualPercent != null) return Number(task.manualPercent);
+  const subs = task.subtasks || [];
+  if(subs.length === 0) return task.completed ? 100 : 0;
+  const done = subs.filter(s=>s.done).length;
+  return Math.round((done / subs.length) * 100);
 }
 
-/* Create Task Element */
-function createTask(text, completed = false) {
-    const ul = document.getElementById("taskList");
-
-    const li = document.createElement("li");
-    li.innerHTML = `
-        <span onclick="toggleTask(this)" style="cursor:pointer;">${text}</span>
-        <button class="deleteBtn" onclick="deleteTask(this)">X</button>
+function renderTasks(){
+  const list = _$('#tasksList');
+  list.innerHTML = '';
+  const q = (_$('#search').value||'').toLowerCase();
+  let items = state.tasks.slice();
+  const f = _$('#filter').value;
+  if(f==='pending') items = items.filter(t=> computePercent(t) < 100);
+  if(f==='completed') items = items.filter(t=> computePercent(t) === 100);
+  if(q) items = items.filter(t=> (t.title + ' ' + (t.notes||'')).toLowerCase().includes(q));
+  items.forEach(t => {
+    const percent = computePercent(t);
+    const div = document.createElement('div'); div.className = 'taskItem';
+    div.innerHTML = `
+      <div class="progress-ring"><svg width="64" height="64" class="ring-svg"><circle cx="32" cy="32" r="24" stroke="rgba(255,255,255,0.06)" stroke-width="6" fill="none"></circle><circle cx="32" cy="32" r="24" stroke="url(#g_${t.id})" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="150" stroke-dashoffset="${150 - (150 * percent / 100)}"></circle><defs><linearGradient id="g_${t.id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${accent(0)}"/><stop offset="1" stop-color="${accent(1)}"/></linearGradient></defs></svg><div style="position:relative;top:-46px;font-weight:700">${percent}%</div></div>
+      <div>
+        <div class="taskTitle">${escapeHTML(t.title)}</div>
+        <div class="taskMeta small">${t.priority} • ${new Date(t.createdAt).toLocaleString()}</div>
+        <div class="small" style="margin-top:8px">${t.notes?escapeHTML(t.notes):''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+        <button class="btn ghost small" data-act="edit" data-id="${t.id}">Edit</button>
+        <button class="btn ${percent === 100 ? 'ghost' : ''}" data-act="toggle" data-id="${t.id}">${percent===100 ? 'Undo' : 'Complete'}</button>
+        <button class="btn ghost small" data-act="del" data-id="${t.id}" style="color:var(--accent1)">Delete</button>
+      </div>
     `;
+    list.appendChild(div);
 
-    if (completed) li.classList.add("completed");
-
-    ul.appendChild(li);
+    // attach events
+    div.querySelector('[data-act="toggle"]').addEventListener('click', ()=> toggleComplete(t.id));
+    div.querySelector('[data-act="del"]').addEventListener('click', ()=> deleteTask(t.id));
+    div.querySelector('[data-act="edit"]').addEventListener('click', ()=> editTask(t.id));
+  });
+  updateStats();
 }
 
-/* Mark Complete */
-function toggleTask(span) {
-    const li = span.parentElement;
-    li.classList.toggle("completed");
-    saveTasks();
-
-    if (li.classList.contains("completed")) showReward();
+/* actions */
+function toggleComplete(id){
+  const t = state.tasks.find(x=>x.id===id); if(!t) return;
+  const pct = computePercent(t);
+  if(pct === 100){
+    t.subtasks = (t.subtasks||[]).map(s=>({ ...s, done:false })); t.manualPercent = 0; t.completed=false;
+  } else {
+    if(t.subtasks && t.subtasks.length) t.subtasks = t.subtasks.map(s=>({...s,done:true}));
+    else t.manualPercent = 100; t.completed = true; awardXP(10); confettiBurst();
+  }
+  saveState(state); renderTasks();
 }
 
-/* Delete */
-function deleteTask(btn) {
-    btn.parentElement.remove();
-    saveTasks();
+function deleteTask(id){
+  if(!confirm('Delete this task?')) return;
+  state.tasks = state.tasks.filter(t=>t.id!==id); saveState(state); renderTasks();
 }
 
-/* Save */
-function saveTasks() {
-    const tasks = [];
+function editTask(id){
+  const t = state.tasks.find(x=>x.id===id); if(!t) return;
+  const newTitle = prompt('Edit title', t.title); if(newTitle === null) return;
+  t.title = newTitle.trim() ? newTitle.trim() : t.title;
+  const newNotes = prompt('Notes (leave blank to keep)', t.notes||''); if(newNotes !== null) t.notes = newNotes;
+  const mp = prompt('Manual percent (leave blank for auto)', t.manualPercent != null ? t.manualPercent : '');
+  t.manualPercent = (mp === '' || mp === null) ? null : clamp(parseInt(mp||0), 0, 100);
+  saveState(state); renderTasks();
+}
 
-    document.querySelectorAll("#taskList li").forEach(li => {
-        tasks.push({
-            text: li.querySelector("span").innerText,
-            completed: li.classList.contains("completed")
-        });
+/* helper */
+function escapeHTML(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+function accent(i){ return i===0 ? getComputedStyle(document.documentElement).getPropertyValue('--accent1').trim() : getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() }
+
+/* update stats and XP */
+function updateStats(){
+  _$('#statTasks')?.textContent = state.tasks.length;
+  updateXPUI();
+}
+
+/* award xp & streak */
+function awardXP(n){
+  state.xp = (state.xp||0) + n;
+  // badges
+  if(state.xp >= 50 && !state.badges.includes('Starter')) state.badges.push('Starter');
+  if(state.xp >= 200 && !state.badges.includes('Achiever')) state.badges.push('Achiever');
+  // streak
+  updateStreak();
+  saveState(state);
+}
+
+/* streak check */
+function updateStreak(){
+  const last = state.lastActive ? new Date(state.lastActive) : null;
+  const today = new Date();
+  const todayStr = today.toDateString();
+  if(!last || last.toDateString() !== todayStr){
+    if(last){
+      const yesterday = new Date(); yesterday.setDate(today.getDate()-1);
+      if(last.toDateString() === yesterday.toDateString()) state.streak = (state.streak||0) + 1;
+      else state.streak = 1;
+    } else state.streak = 1;
+    state.lastActive = new Date().toISOString();
+  }
+  _$('#streak').textContent = state.streak || 0;
+  _$('#profileStreak').textContent = state.streak || 0;
+}
+
+/* --- AI: simple simulated assistant that can generate tasks --- */
+_$('#aiAsk').addEventListener('click', ()=> handleAI());
+function handleAI(){
+  const q = _$('#aiInput').value.trim(); if(!q) return alert('Ask something!');
+  _$('#aiOutput').textContent = 'Thinking...';
+  setTimeout(()=> {
+    const res = aiGenerate(q);
+    _$('#aiOutput').textContent = res.text;
+    if(res.tasks && res.tasks.length){
+      if(confirm('AI suggests tasks. Add to your list?')){
+        res.tasks.forEach(tt => state.tasks.unshift({ id: uid('t_'), title: tt, createdAt: nowISO(), subtasks:[], completed:false, priority:'medium' }));
+        saveState(state); renderTasks();
+        awardXP(3 * res.tasks.length);
+      }
+    }
+  }, 600);
+}
+function aiGenerate(q){
+  const s = q.toLowerCase();
+  if(s.includes('learn') || s.includes('study') || s.includes('plan')){
+    const tasks = [
+      'Read chapter 1 and take notes',
+      'Solve 10 practice problems',
+      'Create flashcards for key terms',
+      'Implement 2 small projects',
+      'Revise and summarize'
+    ];
+    return { text: 'I generated a study plan with 5 tasks.', tasks };
+  }
+  if(s.includes('hello')||s.includes('hi')) return { text: 'Hello! Ask me: "Create 5 tasks to learn React".' };
+  return { text: 'I can generate task lists and give suggestions. Try "Create 5 tasks to learn SQL".' };
+}
+
+/* --- Alarm system (YouTube open + local audio upload) --- */
+let alarmTimers = {};
+_$('#setAlarmBtn').addEventListener('click', ()=> {
+  const t = _$('#alarmTime').value; const lang = _$('#alarmLang').value;
+  if(!t) return alert('Select time');
+  const [hh,mm] = t.split(':').map(Number); let alarmDate = new Date(); alarmDate.setHours(hh,mm,0,0);
+  if(alarmDate.getTime() <= Date.now()) alarmDate.setDate(alarmDate.getDate()+1);
+  const alarm = { id: uid('a_'), time: alarmDate.toISOString(), lang, src:null };
+  state.alarms.push(alarm); saveState(state); scheduleAlarm(alarm); renderAlarms();
+  alert('Alarm set for ' + alarmDate.toLocaleString());
+});
+_$('#uploadAudio').addEventListener('change', (e) => {
+  const f = e.target.files[0]; if(!f) return;
+  const url = URL.createObjectURL(f);
+  // store as next alarm src placeholder
+  if(state.alarms.length && confirm('Attach this audio to the latest alarm?')){
+    state.alarms[state.alarms.length-1].src = url; saveState(state); renderAlarms();
+  } else {
+    alert('You can attach the uploaded audio to an alarm via edit later.');
+  }
+});
+function scheduleAllAlarms(){ state.alarms.forEach(a=> scheduleAlarm(a)); }
+function scheduleAlarm(a){
+  // clear exist
+  if(alarmTimers[a.id]) { clearTimeout(alarmTimers[a.id]); delete alarmTimers[a.id]; }
+  const target = new Date(a.time);
+  const diff = target.getTime() - Date.now();
+  if(diff <= 0) return; // skip past
+  const id = setTimeout(()=> {
+    // trigger: if src then play; else open youtube search
+    if(a.src){
+      const au = new Audio(a.src); au.loop = true; au.play().catch(()=> alert('Autoplay blocked. Click to play.'));
+      showToast('Alarm ringing — click to stop');
+      // attach global stop to stop audio
+      const stop = () => { au.pause(); au.currentTime = 0; document.removeEventListener('click', stop); };
+      document.addEventListener('click', stop, { once:true });
+    } else {
+      const q = a.lang + ' music';
+      const url = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+      window.open(url, '_blank');
+    }
+    // award xp for ringing (later when user marks as done)
+    confettiBurst();
+  }, diff);
+  alarmTimers[a.id] = id;
+}
+function renderAlarms(){
+  const area = _$('#alarmsArea'); area.innerHTML = '';
+  state.alarms.forEach(a=>{
+    const el = document.createElement('div'); el.className = 'small muted';
+    el.style.marginBottom='8px';
+    el.innerHTML = `${new Date(a.time).toLocaleString()} • ${escapeHTML(a.lang)} ${a.src? '• custom audio' : ''} <button class="btn ghost small" data-id="${a.id}">Delete</button>`;
+    area.appendChild(el);
+    el.querySelector('button').addEventListener('click', ()=> {
+      state.alarms = state.alarms.filter(x=>x.id!==a.id); saveState(state); if(alarmTimers[a.id]) { clearTimeout(alarmTimers[a.id]); delete alarmTimers[a.id]; } renderAlarms();
     });
-
-    localStorage.setItem("todoData", JSON.stringify(tasks));
+  });
 }
 
-/* Load */
-window.onload = function() {
-    const saved = JSON.parse(localStorage.getItem("todoData") || "[]");
-    saved.forEach(t => createTask(t.text, t.completed));
-};
-
-/* Reward Popup */
-function showReward() {
-    const reward = document.getElementById("reward");
-    reward.style.opacity = 1;
-    reward.style.transform = "translateY(0)";
-    setTimeout(() => reward.style.opacity = 0, 2000);
+/* --- Rewards & badges --- */
+function renderBadges(){
+  const area = _$('#badgesArea'); area.innerHTML = '';
+  const all = [{id:'Starter', title:'Starter (50 XP)'},{id:'Achiever', title:'Achiever (200 XP)'},{id:'Master', title:'Master (500 XP)'}];
+  all.forEach(b=>{
+    const unlocked = state.badges && state.badges.includes(b.id) || (state.xp||0) >= (b.id==='Starter'?50: b.id==='Achiever'?200:500);
+    const d = document.createElement('div');
+    d.style.padding='10px'; d.style.borderRadius='8px'; d.style.minWidth='140px'; d.style.textAlign='center';
+    d.style.background = unlocked ? 'linear-gradient(90deg,#7c3aed,#06b6d4)' : 'rgba(255,255,255,0.02)';
+    d.style.color = unlocked ? '#000' : 'var(--muted)';
+    d.innerHTML = `<div style="font-weight:700">${b.title}</div><div class="small">${unlocked?'Unlocked':'Locked'}</div>`;
+    area.appendChild(d);
+  });
 }
+
+/* --- Confetti --- */
+function confettiBurst(){
+  const layer = _$('#confetti');
+  for(let i=0;i<40;i++){
+    const el = document.createElement('div');
+    el.style.position='absolute'; el.style.left = (30 + Math.random()*40) + '%'; el.style.top = (20 + Math.random()*40) + '%';
+    el.style.width='8px'; el.style.height='12px'; el.style.background = randomColor(); el.style.borderRadius='3px'; el.style.opacity=1;
+    el.style.transition = 'transform 1100ms cubic-bezier(.2,.8,.2,1), opacity 1100ms';
+    layer.appendChild(el);
+    setTimeout(()=> { el.style.transform = `translateY(${200 + Math.random()*200}px) rotate(${Math.random()*720}deg)`; el.style.opacity = 0; }, 20);
+    setTimeout(()=> el.remove(), 1200);
+  }
+}
+function randomColor(){ return ['#7c3aed','#06b6d4','#ffb86b','#ff6b6b','#60f2a2'][Math.floor(Math.random()*5)]; }
+
+/* --- Toast --- */
+function showToast(msg){
+  const t = document.createElement('div'); t.textContent = msg; t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='30px'; t.style.background='rgba(0,0,0,0.7)'; t.style.padding='10px 14px'; t.style.borderRadius='8px'; t.style.color='#fff'; t.style.zIndex=9999;
+  document.body.appendChild(t); setTimeout(()=> t.remove(),2000);
+}
+
+/* --- Chat overlay --- */
+_$('#btnOpenAI')?.addEventListener('click', ()=> openChat());
+_$('#btnSign')?.addEventListener('click', ()=> {
+  if(confirm('Sign out?')) { localStorage.removeItem(AUTH_KEY); location.reload(); }
+});
+function openChat(){ _$('#chatOverlay').style.display='block'; _$('#chatMessages').innerHTML=''; _$('#chatText').focus(); }
+_$('#closeChat').addEventListener('click', ()=> _$('#chatOverlay').style.display='none');
+_$('#chatSend').addEventListener('click', ()=> {
+  const q = _$('#chatText').value.trim(); if(!q) return;
+  appendChat('You', q); _$('#chatText').value='';
+  setTimeout(()=> {
+    const res = aiGenerate(q); appendChat('Assistant', res.text);
+    if(res.tasks && res.tasks.length && confirm('Add suggested tasks?')){
+      res.tasks.forEach(it => state.tasks.unshift({ id: uid('t_'), title: it, createdAt: nowISO(), subtasks:[], completed:false, priority:'medium' }));
+      saveState(state); renderTasks(); awardXP(5*res.tasks.length);
+    }
+  }, 450);
+});
+function appendChat(who, txt){
+  const m = _$('#chatMessages'); const p = document.createElement('p'); p.innerHTML = `<strong>${who}:</strong> ${escapeHTML(txt)}`; m.appendChild(p); m.scrollTop = m.scrollHeight;
+}
+
+/* --- Persistence & initial render --- */
+function saveState(s){ saveState = saveState; saveStateInternal(s); } // placeholder to avoid linter issues
+function saveStateInternal(s){ state = s; saveStateFunc(); }
+function saveStateFunc(){ saveStateRaw(); updateXPUI(); renderBadges(); renderTasks(); renderAlarms(); }
+function saveStateRaw(){ localStorage.setItem(STORAGE_PREFIX(currentUser), JSON.stringify(state)); }
+
+function loadAll(){
+  state = loadState();
+  updateXPUI(); renderTasks(); renderBadges(); renderAlarms(); scheduleAllAlarms(); updateStreak();
+}
+loadAll();
+
+/* scheduled helper to avoid function hoisting issues */
+function renderAlarms(){ renderAlarmsInternal(); }
+function renderAlarmsInternal(){
+  const area = _$('#alarmsArea'); if(!area) return; area.innerHTML = ''; state.alarms.forEach(a => {
+    const d = document.createElement('div'); d.className='small muted'; d.style.marginBottom='8px';
+    d.innerHTML = `${new Date(a.time).toLocaleString()} • ${escapeHTML(a.lang)} ${a.src? '• custom audio':''} <button class="btn ghost small" data-id="${a.id}">Delete</button>`;
+    area.appendChild(d); d.querySelector('button').addEventListener('click', ()=> {
+      state.alarms = state.alarms.filter(x=>x.id!==a.id); saveState(state); renderAlarms();
+    });
+  });
+}
+
+/* Replace saveState reference */
+function saveState(s){ state = s; localStorage.setItem(STORAGE_PREFIX(currentUser), JSON.stringify(state)); updateXPUI(); renderBadges(); renderTasks(); renderAlarms(); }
+
+/* schedule alarms defined earlier uses state.alarms and alarmTimers */
+
+/* --- small helpers / utils --- */
+function debounce(fn, wait){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), wait); } }
+
+/* --- initial UI wiring --- */
+_$('#quickAddBtn').addEventListener('click', ()=> { _$('#quickTitle').focus(); });
+_$('#quickAddBtn').addEventListener('dblclick', ()=> {
+  const t = prompt('Quick add title'); if(t) { state.tasks.unshift({ id: uid('t_'), title:t, createdAt:nowISO(),subtasks:[],completed:false,priority:'medium' }); saveState(state); renderTasks(); }
+});
+_$('#quickTitle').addEventListener('keypress', (e)=> { if(e.key==='Enter') _$('#quickAddBtn').click(); });
+
+/* trigger initial render of tasks and stats */
+renderTasks();
+updateXPUI();
+renderBadges();
+renderAlarms();
+scheduleAllAlarms();
+updateStreak();
+
+/* reset data */
+_$('#resetBtn').addEventListener('click', ()=> {
+  if(!confirm('Reset all local data for this user?')) return;
+  state = { xp:0, streak:0, lastActive:null, tasks:[], alarms:[], badges:[] }; saveState(state); renderTasks(); renderBadges(); updateXPUI(); showToast('Reset done');
+});
+
+/* utilities for color used in gradient stops */
+function getAccentColor(i){ return i===0? '#7c3aed' : '#06b6d4' }
+
 </script>
-
 </body>
 </html>
