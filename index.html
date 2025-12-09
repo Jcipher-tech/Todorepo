@@ -1,59 +1,308 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BY JAGRUTI — Home</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Animated To-Do App</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ---------------- GLOBAL ---------------- */
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Floating Gradient Background */
+.bg-animated {
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(circle at center, #222 10%, #000 80%);
+  animation: rotateBG 25s linear infinite;
+  z-index: -10;
+}
+
+@keyframes rotateBG {
+  100% { transform: rotate(360deg); }
+}
+
+.container {
+  width: 90%;
+  margin: 40px auto;
+}
+
+/* ---------------- LOGIN PAGE ---------------- */
+
+#login-page {
+  text-align: center;
+  margin-top: 120px;
+}
+
+#login-page input {
+  padding: 12px;
+  width: 260px;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 12px;
+}
+
+#login-page button {
+  padding: 12px 30px;
+  background: #ff006a;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+}
+
+/* ---------------- TO-DO SECTION ---------------- */
+
+#todo-page { display: none; }
+
+.todo-box {
+  background: #1f1f1f;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 15px #000;
+}
+
+.todo-box input {
+  width: 70%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+.todo-box button {
+  padding: 12px;
+  background: #0099ff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  background: #2a2a2a;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.reward {
+  display: none;
+  position: fixed;
+  top: 30%;
+  left: 33%;
+  width: 35%;
+  padding: 25px;
+  background: #00c853;
+  color: #fff;
+  text-align: center;
+  border-radius: 20px;
+  font-size: 22px;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0);}
+  100% { transform: translateY(-15px);}
+}
+
+/* ---------------- ALARM SECTION ---------------- */
+
+#alarm-section {
+  background: #1f1f1f;
+  padding: 25px;
+  margin-top: 40px;
+  border-radius: 20px;
+}
+
+#alarm-section input, select {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+#alarm-section button {
+  padding: 12px 20px;
+  background: #ffcc00;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+/* ---------------- CHATBOT ---------------- */
+
+#chatbot-box {
+  margin-top: 40px;
+  padding: 20px;
+  background: #111;
+  border-radius: 15px;
+}
+
+#chat-input {
+  width: 80%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+#chat-btn {
+  padding: 12px 20px;
+  background: #ff00ea;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ---------------- END STYLE ---------------- */
+</style>
+
 </head>
-<body id="page-home">
-  <div class="shape s1"></div>
-  <div class="shape s2"></div>
+<body>
 
-  <header class="nav container">
-    <div class="brand"><a href="index.html">BYJAGRUTI</a></div>
-    <nav>
-      <a href="features.html">Features</a>
-      <a href="todo.html">To-Do</a>
-      <a href="ai.html">AI</a>
-      <a href="profile.html">Profile</a>
-    </nav>
-    <div class="right">
-      <a class="btn" href="login.html">Login</a>
-    </div>
-  </header>
+<div class="bg-animated"></div>
 
-  <main class="container hero">
-    <div class="hero-left">
-      <h1>Build beautiful apps — <span class="accent">fast</span></h1>
-      <p class="muted">Premium animations, AI helper, gamified rewards and a fully-featured To-Do app — ready to deploy.</p>
-      <div class="cta">
-        <a class="btn large" href="todo.html">Try the To-Do App</a>
-        <a class="btn ghost" href="ai.html">Open AI Chatbot</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="preview card">
-        <h3>Live Preview</h3>
-        <div class="preview-box">Your app preview</div>
-      </div>
-    </div>
-  </main>
+<!-- ---------------- LOGIN PAGE ---------------- -->
+<div id="login-page">
+  <h1>Welcome User 👋</h1>
+  <input type="text" id="username" placeholder="Enter username"><br>
+  <button onclick="login()">Login</button>
+</div>
 
-  <section class="container features">
-    <h2>Highlights</h2>
-    <ul class="grid">
-      <li>Animated premium shapes</li>
-      <li>AI Chatbot (local / extendable)</li>
-      <li>Gamified rewards & XP</li>
-      <li>Per-user data (localStorage) — plug Firebase to persist</li>
-    </ul>
-  </section>
+<!-- ---------------- MAIN APP ---------------- -->
+<div id="todo-page" class="container">
 
-  <footer class="container footer">
-    <div>© <strong>BY JAGRUTI</strong> • Built for you</div>
-  </footer>
+  <h2>🚀 Advanced Animated To-Do App</h2>
 
-  <script src="app.js"></script>
+  <div class="todo-box">
+    <input type="text" id="task-input" placeholder="Add a new task...">
+    <button onclick="addTask()">Add</button>
+
+    <div id="task-list"></div>
+  </div>
+
+  <!-- Reward Popup -->
+  <div id="reward" class="reward">🎉 Great Job! Task Completed!</div>
+
+  <!-- ---------------- ALARM CLOCK ---------------- -->
+  <div id="alarm-section">
+    <h2>⏰ Alarm with YouTube Music</h2>
+
+    <input type="time" id="alarm-time">
+    
+    <select id="song-language">
+      <option value="Hindi song">Hindi</option>
+      <option value="Marathi song">Marathi</option>
+      <option value="English pop song">English</option>
+    </select>
+
+    <button onclick="setAlarm()">Set Alarm</button>
+  </div>
+
+  <!-- ---------------- CHATBOT ---------------- -->
+  <div id="chatbot-box">
+    <h2>💬 AI Chatbot</h2>
+    <input id="chat-input" placeholder="Ask something...">
+    <button id="chat-btn" onclick="chat()">Send</button>
+    <p id="chat-response"></p>
+  </div>
+
+</div>
+
+<script>
+/* ---------------- LOGIN LOGIC ---------------- */
+function login() {
+  if (document.getElementById("username").value.trim() === "") {
+    alert("Enter username");
+    return;
+  }
+  document.getElementById("login-page").style.display = "none";
+  document.getElementById("todo-page").style.display = "block";
+}
+
+/* ---------------- TO-DO LIST LOGIC ---------------- */
+function addTask() {
+  let taskText = document.getElementById("task-input").value.trim();
+  if (taskText === "") return;
+
+  let taskDiv = document.createElement("div");
+  taskDiv.className = "task";
+
+  taskDiv.innerHTML = `
+      <span>${taskText}</span>
+      <button onclick="completeTask(this)">✔</button>
+  `;
+
+  document.getElementById("task-list").appendChild(taskDiv);
+  document.getElementById("task-input").value = "";
+}
+
+function completeTask(btn) {
+  btn.parentElement.remove();
+  document.getElementById("reward").style.display = "block";
+
+  setTimeout(() => {
+    document.getElementById("reward").style.display = "none";
+  }, 2000);
+}
+
+/* ---------------- ALARM + YOUTUBE MUSIC ---------------- */
+let alarmTimeout;
+
+function setAlarm() {
+  let alarmTime = document.getElementById("alarm-time").value;
+  let lang = document.getElementById("song-language").value;
+
+  if (!alarmTime) { alert("Select time"); return; }
+
+  let now = new Date();
+  let alarm = new Date();
+
+  alarm.setHours(alarmTime.split(":")[0]);
+  alarm.setMinutes(alarmTime.split(":")[1]);
+  alarm.setSeconds(0);
+
+  let diff = alarm - now;
+  if (diff < 0) diff += 24 * 60 * 60 * 1000;
+
+  alert("Alarm Set!");
+
+  alarmTimeout = setTimeout(() => {
+    let search = lang + " music";
+    let url = "https://www.youtube.com/results?search_query=" + encodeURIComponent(search);
+    window.open(url, "_blank");
+  }, diff);
+}
+
+/* ---------------- CHATBOT ---------------- */
+function chat() {
+  let input = document.getElementById("chat-input").value.toLowerCase();
+  let response = "I am not sure about that.";
+
+  if (input.includes("hello")) response = "Hello! How can I help?";
+  if (input.includes("task")) response = "You can add tasks using the box above!";
+  if (input.includes("alarm")) response = "Set your alarm with the time selector.";
+  if (input.includes("hi")) response = "Hi! 😊";
+
+  document.getElementById("chat-response").innerText = response;
+}
+
+/* ---------------- END SCRIPT ---------------- */
+</script>
+
 </body>
 </html>
