@@ -1,835 +1,229 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DesoStyle — Premium To-Do</title>
-<link rel="icon" href="data:,">
+<meta charset="UTF-8">
+<title>Premium To-Do App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-/* ---------------------- Root / Fonts ---------------------- */
-:root{
-  --bg-1:#060617; --bg-2:#07112a;
-  --card: rgba(255,255,255,0.03);
-  --muted:#9aa3b2;
-  --accent-a:#7c3aed; --accent-b:#06b6d4;
-  --glass: rgba(255,255,255,0.04);
-  --success:#10b981; --danger:#ef4444;
-  --radius:16px;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color:#e8f0ff;
-  background: radial-gradient(900px 600px at 10% 20%, rgba(124,58,237,0.07), transparent),
-              radial-gradient(700px 400px at 90% 80%, rgba(6,182,212,0.05), transparent),
-              linear-gradient(180deg,var(--bg-1),var(--bg-2));
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  overflow-y:auto;
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #020202;
+    color: white;
+    overflow-x: hidden;
 }
 
-/* ---------- Floating animated premium blob (you asked) ---------- */
-.blob {
-  position: fixed;
-  left: 6%;
-  top: 8%;
-  width: 520px;
-  height: 520px;
-  z-index: 0;
-  filter: blur(48px) saturate(140%);
-  transform-origin: center;
-  background: linear-gradient(135deg,var(--accent-a),#a78bfa 40%, var(--accent-b));
-  opacity: 0.85;
-  border-radius: 45% 55% 50% 50% / 45% 50% 50% 55%;
-  animation: floatBlob 14s ease-in-out infinite;
-  mix-blend-mode: screen;
+/* Floating gradient shapes */
+.shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #7928ff, #ff2bd8);
+    filter: blur(120px);
+    opacity: 0.4;
+    animation: float 12s infinite alternate;
 }
-@keyframes floatBlob{
-  0% { transform: translateY(0) rotate(0deg) scale(1); }
-  50% { transform: translateY(-28px) rotate(6deg) scale(0.98); }
-  100% { transform: translateY(0) rotate(0deg) scale(1); }
+#shape1 { top: -80px; left: -50px; }
+#shape2 { bottom: -80px; right: -50px; animation-delay: 3s; }
+
+@keyframes float {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(40px) scale(1.1); }
 }
 
-/* ---------- Container & Layout ---------- */
+/* Main container */
 .container {
-  max-width:1100px;
-  margin:28px auto;
-  padding:18px;
-  position:relative;
-  z-index: 2;
+    width: 90%;
+    max-width: 420px;
+    margin: 120px auto;
+    padding: 25px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 0 20px rgba(141,0,255,0.5);
+    animation: fadeIn 0.7s ease;
 }
-.header {
-  display:flex; align-items:center; gap:12px; justify-content:space-between;
-  margin-bottom:18px;
-}
-.brand { display:flex; gap:12px; align-items:center }
-.logo {
-  width:44px; height:44px; border-radius:10px;
-  background:linear-gradient(90deg,var(--accent-a),var(--accent-b));
-  box-shadow: 0 8px 30px rgba(124,58,237,0.12);
-}
-.nav { display:flex; gap:12px; align-items:center }
-.nav a { color:rgba(255,255,255,0.9); text-decoration:none; padding:8px 10px; border-radius:8px }
-.nav a.active { background: rgba(255,255,255,0.03); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } }
 
-/* ---------- Card ---------- */
-.card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-  border-radius: var(--radius);
-  padding:16px;
-  border:1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 14px 44px rgba(0,0,0,0.6);
-  margin-bottom:18px;
+h1 {
+    text-align: center;
+    font-size: 32px;
+    background: linear-gradient(90deg, #c084fc, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-/* ---------- Hero ---------- */
-.hero { display:flex; gap:20px; align-items:center }
-.hero-left { flex:1 }
-h1 { font-size:28px; margin:0 }
-.lead { color:var(--muted); margin-top:8px }
-
-/* ---------- Controls & Buttons ---------- */
-.controls { display:flex; gap:8px; align-items:center; margin-top:12px }
-.btn {
-  background:linear-gradient(90deg,var(--accent-a),var(--accent-b));
-  color:white; padding:8px 12px; border-radius:10px; border:0; cursor:pointer;
-  box-shadow: 0 8px 26px rgba(7,12,29,0.45); font-weight:600;
+/* Input area */
+.inputRow {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
 }
-.btn.ghost { background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted); box-shadow:none; }
-.small { font-size:13px; color:var(--muted) }
-
-/* ---------- Grid Layout (Main / Side) ---------- */
-.main-grid {
-  display:grid;
-  grid-template-columns: 1fr 360px;
-  gap:18px;
-  align-items:start;
+input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
 }
-
-/* ---------- To-Do List ---------- */
-.todo-form { display:flex; gap:10px; margin-top:12px }
-.input, textarea, select { padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); background:rgba(255,255,255,0.02); color:inherit; outline:none }
-.input { flex:1 }
-
-.task-list { margin-top:12px; display:flex; flex-direction:column; gap:12px; max-height:56vh; overflow:auto; padding-right:6px }
-.task {
-  display:grid; grid-template-columns: 64px 1fr 120px; gap:12px; align-items:center;
-  padding:12px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-  border:1px solid rgba(255,255,255,0.02);
-  transition: transform .18s ease, box-shadow .18s ease;
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #9333ea, #3b82f6);
+    color: white;
+    transition: 0.3s ease;
+    font-size: 18px;
 }
-.task:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(7,12,29,0.6); }
+button:hover { transform: scale(1.07); }
 
-.avatar { width:56px; height:56px; border-radius:50%; display:grid; place-items:center; font-weight:700; color:white; background:linear-gradient(90deg,var(--accent-a),var(--accent-b)); }
-.meta { color:var(--muted); font-size:13px }
-.title { font-weight:700 }
-.desc { color:var(--muted); font-size:13px; margin-top:6px }
+/* Task List */
+ul { padding: 0; margin-top: 10px; }
+li {
+    background: rgba(255,255,255,0.09);
+    list-style-type: none;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideIn 0.3s ease;
+}
+@keyframes slideIn { from {opacity: 0; transform: translateX(20px);} }
 
-/* ---------- Progress ring style ---------- */
-.progress-ring { width:56px; height:56px; display:grid; place-items:center; }
-.ring-svg { transform: rotate(-90deg); }
-
-/* ---------- Side Panel ---------- */
-.side { display:flex; flex-direction:column; gap:12px }
-.stat { padding:12px; border-radius:10px; background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02) }
-
-/* ---------- Chatbot ---------- */
-.chat { margin-top:12px }
-.chat-messages { max-height:220px; overflow:auto; padding:8px; border-radius:8px; background:rgba(0,0,0,0.12) }
-.chat-input { display:flex; gap:8px; margin-top:8px }
-
-/* ---------- Confetti ---------- */
-.confetti-layer { position:fixed; inset:0; pointer-events:none; z-index:9999 }
-
-/* ---------- Mobile ---------- */
-@media (max-width:980px){
-  .main-grid { grid-template-columns: 1fr; }
-  .nav { display:none }
-  .blob { display:none } /* keep simple on mobile */
+li.completed {
+    text-decoration: line-through;
+    opacity: 0.6;
 }
 
-/* ---------- Tiny helpers ---------- */
-.muted { color:var(--muted) }
-.right { margin-left:auto }
-.pill { padding:6px 8px; border-radius:999px; background:rgba(255,255,255,0.02); font-size:13px }
+.deleteBtn {
+    background: #ef4444;
+    padding: 8px 13px;
+    border-radius: 8px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
 
-/* ---------- Animations ---------- */
-.fade-in { animation: fadeIn .45s ease both }
-@keyframes fadeIn { from{opacity:0; transform: translateY(8px)} to{opacity:1; transform:none} }
-
+#reward {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4ade80;
+    padding: 12px 20px;
+    color: black;
+    border-radius: 10px;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: 0.4s ease;
+}
 </style>
 </head>
+
 <body>
 
-<!-- Floating premium blob -->
-<div class="blob" aria-hidden="true"></div>
+<!-- Floating shapes -->
+<div id="shape1" class="shape"></div>
+<div id="shape2" class="shape"></div>
 
-<div class="container" role="main">
-  <header class="header">
-    <div class="brand">
-      <div class="logo"></div>
-      <div>
-        <div style="font-weight:700">DesoStyle</div>
-        <div class="small muted">Premium To-Do & Productivity</div>
-      </div>
+<div class="container">
+    <h1>My To-Do List</h1>
+
+    <div class="inputRow">
+        <input type="text" id="taskInput" placeholder="Add a task...">
+        <button id="addBtn">+</button>
     </div>
 
-    <nav class="nav" aria-label="Main">
-      <a href="#home" data-link class="active">Home</a>
-      <a href="#todo" data-link>To-Do</a>
-      <a href="#ai" data-link>AI</a>
-      <a href="#profile" data-link>Profile</a>
-      <a href="#rewards" data-link>Rewards</a>
-    </nav>
-
-    <div class="right">
-      <button id="authBtn" class="btn ghost">Sign in</button>
-    </div>
-  </header>
-
-  <!-- MAIN CONTENT GRID -->
-  <section id="home" class="card fade-in">
-    <div class="hero">
-      <div class="hero-left">
-        <h1>Beautiful, fast, and delightful task management</h1>
-        <div class="lead muted">DESO-inspired premium design with animations, AI assistant and gamified rewards.</div>
-        <div class="controls">
-          <button class="btn" data-scroll="#todo">Open To-Do</button>
-          <button class="btn ghost" data-scroll="#ai">Ask AI</button>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="card" style="width:360px">
-          <h3 style="margin:0">Quick Stats</h3>
-          <div style="margin-top:8px" class="muted">Tasks, Progress, and XP overview</div>
-          <div style="display:flex;gap:8px;margin-top:12px">
-            <div class="stat" style="flex:1">
-              <div class="small muted">Tasks</div>
-              <div style="font-weight:700; font-size:20px" id="statTasks">0</div>
-            </div>
-            <div class="stat" style="flex:1">
-              <div class="small muted">XP</div>
-              <div style="font-weight:700; font-size:20px" id="statXP">0</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="main-grid">
-    <!-- LEFT: To-Do / AI -->
-    <div>
-
-      <!-- To-Do Panel -->
-      <section id="todo" class="card fade-in" aria-labelledby="todoHeading">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
-            <h2 id="todoHeading" style="margin:0">Your Tasks</h2>
-            <div class="small muted">Add subtasks, track percent, earn XP</div>
-          </div>
-          <div class="small muted">Streak: <span id="streakCount">0</span> days</div>
-        </div>
-
-        <div class="todo-form" style="margin-top:12px">
-          <input id="taskTitle" class="input" placeholder="Task title (required)">
-          <select id="taskPriority">
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-          </select>
-          <button id="addTaskBtn" class="btn">Add</button>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
-          <input id="searchTasks" placeholder="Search tasks..." class="input small">
-          <select id="filterStatus" class="small">
-            <option value="all">All</option><option value="pending">Pending</option><option value="completed">Completed</option>
-          </select>
-          <select id="sortBy" class="small">
-            <option value="created">Newest</option><option value="priority">Priority</option><option value="percent">Completion</option>
-          </select>
-          <div class="right">
-            <button id="exportBtn" class="btn ghost small">Export</button>
-            <button id="importBtn" class="btn ghost small">Import</button>
-            <input id="importFile" type="file" accept="application/json" class="hidden">
-          </div>
-        </div>
-
-        <div class="task-list" id="tasksContainer" aria-live="polite"></div>
-      </section>
-
-      <!-- AI Panel -->
-      <section id="ai" class="card fade-in">
-        <h2 style="margin:0">AI Assistant</h2>
-        <div class="muted small" style="margin-top:6px">Ask the assistant to generate tasks or tips.</div>
-        <div style="margin-top:12px" class="chat">
-          <div class="chat-messages" id="chatMessages"></div>
-          <div class="chat-input" style="margin-top:10px">
-            <input id="chatInput" class="input" placeholder="e.g. Create 5 study tasks for Data Structures">
-            <button id="chatSend" class="btn">Ask</button>
-          </div>
-        </div>
-      </section>
-
-    </div>
-
-    <!-- RIGHT: Side panel -->
-    <aside class="side">
-      <div class="stat card">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));display:grid;place-items:center;font-weight:700">XP</div>
-          <div>
-            <div class="small muted">Total XP</div>
-            <div style="font-weight:700;font-size:20px" id="xpTotal">0</div>
-            <div class="muted small">Level <span id="levelNum">1</span></div>
-          </div>
-        </div>
-        <div style="margin-top:12px">
-          <div class="small muted">Overall Progress</div>
-          <div style="height:10px;background:rgba(255,255,255,0.03);border-radius:999px;margin-top:6px">
-            <div id="overallBar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border-radius:999px;transition:width .6s ease"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="stat card">
-        <h3 style="margin:0">Daily Quote</h3>
-        <div id="dailyQuote" class="muted small" style="margin-top:8px">"Plan your work and work your plan."</div>
-      </div>
-
-      <div class="card">
-        <h3 style="margin:0">Quick Actions</h3>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
-          <button id="markAll" class="btn ghost">Mark All Done</button>
-          <button id="delCompleted" class="btn ghost">Delete Completed</button>
-          <button id="downloadSample" class="btn">Download Sample</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3 style="margin:0">Profile</h3>
-        <div style="margin-top:8px" class="small muted">User: <span id="profileUser">Guest</span></div>
-        <div style="margin-top:10px">
-          <button id="goProfile" class="btn ghost">Open Profile</button>
-        </div>
-      </div>
-
-    </aside>
-  </div>
-
-  <!-- Profile (hidden section for navigation) -->
-  <section id="profile" class="card fade-in" style="display:none">
-    <h2>Profile</h2>
-    <div class="muted small">Local profile & progress</div>
-    <div style="margin-top:12px">
-      <div><strong>Username:</strong> <span id="pfUser">Guest</span></div>
-      <div style="margin-top:6px"><strong>XP:</strong> <span id="pfXP">0</span></div>
-      <div style="margin-top:6px"><strong>Streak:</strong> <span id="pfStreak">0</span> days</div>
-      <div style="margin-top:12px">
-        <button id="resetProg" class="btn ghost">Reset Progress</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Rewards section -->
-  <section id="rewards" class="card fade-in" style="display:none">
-    <h2>Rewards & Badges</h2>
-    <div class="muted small">Earn badges by collecting XP and completing streaks</div>
-    <div id="badgesArea" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"></div>
-  </section>
-
+    <ul id="taskList"></ul>
 </div>
 
-<!-- Confetti layer -->
-<div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
-
-<!-- Hidden file input for import/export -->
-<input id="fileExport" type="file" class="hidden">
+<div id="reward">🎉 Task Completed!</div>
 
 <script>
-/* ===========================
-   Premium To-Do App — single file
-   Features:
-   - Single-file multipage behavior (hash-based navigation)
-   - Login (username stored locally)
-   - To-do with subtasks, percent, progress ring
-   - XP, streaks, badges, confetti, sounds
-   - AI chatbot (local/simulated)
-   - Floating blob already added (CSS)
-   =========================== */
+/* MAIN FIX: Ensure event listener works */
+document.getElementById("addBtn").addEventListener("click", addTask);
 
-/* ---------- Utilities ---------- */
-function qs(sel){ return document.querySelector(sel) }
-function qsa(sel){ return Array.from(document.querySelectorAll(sel)) }
-function uid(pref='id_'){ return pref + Math.random().toString(36).slice(2,9) }
-function nowISO(){ return new Date().toISOString() }
-function saveJSON(key,obj){ localStorage.setItem(key, JSON.stringify(obj)) }
-function loadJSON(key, fallback){ const v=localStorage.getItem(key); return v? JSON.parse(v): fallback }
-function clamp(n,min,max){ return Math.max(min, Math.min(max,n)) }
-
-/* ---------- App State per user ---------- */
-const AUTH_KEY = 'ds_current_user';
-function currentUser(){ return localStorage.getItem(AUTH_KEY) || null }
-function setUser(name){ localStorage.setItem(AUTH_KEY, name); }
-function userKey(name){ return 'ds_user_'+name }
-function loadUser(){ const u=currentUser() || 'Guest'; return loadJSON(userKey(u), { xp:0, tasks:[], streak:0, lastActive:null, badges:[] }) }
-function saveUser(state){ const u=currentUser()||'Guest'; saveJSON(userKey(u), state) }
-
-/* ---------- Page / Navigation ---------- */
-const links = qsa('[data-link]');
-links.forEach(a => a.addEventListener('click', e => {
-  e.preventDefault();
-  const target = a.getAttribute('href') || a.dataset.scroll;
-  goTo(target);
-}));
-
-function goTo(hash){
-  // hide all major sections and show target
-  const ids = ['home','todo','ai','profile','rewards'];
-  ids.forEach(id => {
-    const el = qs('#'+id);
-    if(!el) return;
-    el.style.display = (('#'+id) === hash || ('#'+id) === location.hash) ? 'block' : (id==='home'? 'block':'none');
-  });
-  // if hash is supplied as element reference
-  if(hash && hash.startsWith('#')){
-    location.hash = hash;
-  } else if(hash && hash.startsWith('/#')) {
-    location.hash = hash.slice(1);
-  }
-  updateActiveNav();
-}
-
-/* Update active nav link */
-function updateActiveNav(){
-  const cur = location.hash || '#home';
-  qsa('.nav a').forEach(a => {
-    a.classList.toggle('active', (a.getAttribute('href') === cur));
-  });
-}
-
-/* on load, handle hash */
-window.addEventListener('hashchange', updateActiveNav);
-if(!location.hash) location.hash = '#home';
-updateActiveNav();
-
-/* ---------- Authentication (simple username) ---------- */
-const authBtn = qs('#authBtn');
-authBtn.addEventListener('click', ()=> {
-  if(currentUser()){
-    if(confirm('Sign out?')) {
-      localStorage.removeItem(AUTH_KEY);
-      location.reload();
-    }
-    return;
-  }
-  const name = prompt('Enter username (will be stored locally):','Guest');
-  if(name) { setUser(name); initApp(); }
+/* Enable Enter key */
+document.getElementById("taskInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") addTask();
 });
 
-function ensureAuth(){
-  if(!currentUser()){
-    const name = prompt('Please enter username to continue:', 'Guest');
-    if(name) setUser(name); else setUser('Guest');
-  }
+/* Add Task */
+function addTask() {
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+
+    if (!text) return; // ignore empty tasks
+
+    createTask(text);
+    saveTasks();
+    input.value = "";
 }
 
-/* ---------- Initial setup & sounds ---------- */
-const clickSound = new Audio('data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA...'); // tiny silent placeholder
-// The above base64 intentionally shortened for brevity in display. In real file you can use short base64 beeps or fetch small assets.
+/* Create Task Element */
+function createTask(text, completed = false) {
+    const ul = document.getElementById("taskList");
 
-function playSound(){
-  // small UI sound (muted if autoplay blocked)
-  try { clickSound.currentTime = 0; clickSound.play().catch(()=>{}); } catch(e){}
-}
-
-/* ---------- User & Initial render ---------- */
-function initApp(){
-  ensureAuth();
-  const u = currentUser() || 'Guest';
-  qs('#profileUser').textContent = u;
-  qs('#pfUser').textContent = u;
-  renderAll();
-}
-initApp();
-
-/* ---------- Task management ---------- */
-function getState(){ return loadUser() }
-function persist(state){ saveUser(state); renderAll(); }
-
-function addTask(){
-  const title = qs('#taskTitle').value.trim();
-  if(!title) { alert('Task title is required'); return; }
-  const state = getState();
-  const t = { id: uid('t_'), title, notes:'', createdAt: nowISO(), completed:false, subtasks:[], manualPercent:null, priority: qs('#taskPriority').value };
-  state.tasks.unshift(t);
-  // set lastActive for streak calculation
-  state.lastActive = new Date().toISOString();
-  persist(state);
-  qs('#taskTitle').value = '';
-  playSound();
-}
-
-qs('#addTaskBtn').addEventListener('click', addTask);
-
-/* Add keyboard enter for task */
-qs('#taskTitle').addEventListener('keydown', e => { if(e.key === 'Enter') addTask(); });
-
-/* Search/filter listeners */
-qs('#searchTasks').addEventListener('input', debounce(renderTasks, 220));
-qs('#filterStatus').addEventListener('change', renderTasks);
-qs('#sortBy').addEventListener('change', renderTasks);
-
-/* Export/Import */
-qs('#exportBtn').addEventListener('click', ()=> {
-  const state = getState();
-  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tasks_'+(currentUser()||'user')+'.json'; a.click();
-});
-qs('#importBtn').addEventListener('click', ()=> qs('#importFile').click());
-qs('#importFile').addEventListener('change', (e) => {
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = ()=> {
-    try {
-      const parsed = JSON.parse(r.result);
-      const state = getState();
-      state.tasks = [...(parsed.tasks || []), ...state.tasks];
-      persist(state);
-      alert('Imported tasks');
-    } catch(e){ alert('Import failed: ' + e.message) }
-  };
-  r.readAsText(f);
-});
-
-/* Mark all / delete completed / sample */
-qs('#markAll').addEventListener('click', ()=> {
-  const state = getState(); state.tasks = state.tasks.map(t => ({...t, completed:true})); persist(state);
-});
-qs('#delCompleted').addEventListener('click', ()=> {
-  const state = getState(); state.tasks = state.tasks.filter(t => !t.completed); persist(state);
-});
-qs('#downloadSample').addEventListener('click', ()=> {
-  const sample = [
-    { id: uid('t'), title:'Design landing hero', notes:'Add shapes & motion', createdAt: nowISO(), completed:false, subtasks: [{id:uid('s'), title:'Wireframe', done:false}], priority:'high' },
-    { id: uid('t'), title:'Study DBMS', notes:'Practice queries', createdAt: nowISO(), completed:false, subtasks: [], priority:'medium' },
-  ];
-  const blob = new Blob([JSON.stringify({tasks: sample}, null, 2)], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'sample_tasks.json'; a.click();
-});
-
-/* ---------- Renderers ---------- */
-function renderAll(){
-  renderTasks();
-  renderStats();
-  renderProfile();
-  renderBadges();
-  updateQuote();
-  updateStreak();
-}
-
-function renderTasks(){
-  const container = qs('#tasksContainer');
-  const state = getState();
-  const q = (qs('#searchTasks').value||'').toLowerCase();
-  let items = (state.tasks || []).slice();
-  const fs = qs('#filterStatus').value;
-  if(fs === 'pending') items = items.filter(t => !t.completed);
-  if(fs === 'completed') items = items.filter(t => t.completed);
-  if(q) items = items.filter(t => (t.title + ' ' + (t.notes||'')).toLowerCase().includes(q));
-  const sb = qs('#sortBy').value;
-  if(sb === 'priority') items.sort((a,b)=> priorityVal(b.priority) - priorityVal(a.priority));
-  if(sb === 'percent') items.sort((a,b)=> computePercent(b) - computePercent(a));
-  if(sb === 'created') items.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
-
-  container.innerHTML = '';
-  items.forEach(t => {
-    const percent = computePercent(t);
-    const div = document.createElement('div');
-    div.className = 'task';
-    div.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center">
-        <div class="progress-ring" title="${percent}%">
-          <svg class="ring-svg" width="56" height="56">
-            <circle cx="28" cy="28" r="24" stroke="rgba(255,255,255,0.06)" stroke-width="6" fill="none"></circle>
-            <circle id="c-${t.id}" cx="28" cy="28" r="24" stroke="url(#grad)" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="150" stroke-dashoffset="${150 - (150 * percent / 100)}"></circle>
-            <defs>
-              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="${getAccent(0)}"/><stop offset="100%" stop-color="${getAccent(1)}"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="position:relative;top:-42px;color:white;font-weight:700">${percent}%</div>
-        </div>
-      </div>
-      <div>
-        <div class="title">${escapeHtml(t.title)}</div>
-        <div class="desc">${escapeHtml(t.notes || '')}</div>
-        <div class="badges" style="margin-top:8px">
-          <div class="pill">${t.priority}</div>
-          <div class="pill small muted">${new Date(t.createdAt).toLocaleString()}</div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-        <button class="btn ghost small" data-act="edit">Edit</button>
-        <button class="btn ${percent===100 ? 'ghost' : ''}" data-act="toggle">${percent===100 ? 'Mark Pending' : 'Complete'}</button>
-        <button class="btn ghost small" data-act="del" style="color:var(--danger)">Delete</button>
-      </div>
+    const li = document.createElement("li");
+    li.innerHTML = `
+        <span onclick="toggleTask(this)" style="cursor:pointer;">${text}</span>
+        <button class="deleteBtn" onclick="deleteTask(this)">X</button>
     `;
-    // events
-    div.querySelector('[data-act="toggle"]').addEventListener('click', ()=> toggleComplete(t.id));
-    div.querySelector('[data-act="del"]').addEventListener('click', ()=> deleteTask(t.id));
-    div.querySelector('[data-act="edit"]').addEventListener('click', ()=> editTask(t.id));
-    container.appendChild(div);
-  });
-  qs('#statTasks').textContent = (state.tasks||[]).length;
-  // overall bar
-  qs('#overallBar').style.width = overallPercent() + '%';
+
+    if (completed) li.classList.add("completed");
+
+    ul.appendChild(li);
 }
 
-function renderStats(){
-  const state = getState();
-  qs('#xpTotal').textContent = state.xp || 0;
-  qs('#levelNum').textContent = Math.floor((state.xp||0)/50)+1;
-  qs('#statXP').textContent = state.xp || 0;
-  qs('#pfXP').textContent = state.xp || 0;
+/* Mark Complete */
+function toggleTask(span) {
+    const li = span.parentElement;
+    li.classList.toggle("completed");
+    saveTasks();
+
+    if (li.classList.contains("completed")) showReward();
 }
 
-/* ---------- Actions ---------- */
-function computePercent(task){
-  const subs = task.subtasks || [];
-  if(subs.length === 0) return task.manualPercent != null ? clamp(parseInt(task.manualPercent||0), 0, 100) : (task.completed?100:0);
-  const done = subs.filter(s=>s.done).length;
-  return Math.round((done / subs.length) * 100);
-}
-function overallPercent(){
-  const state = getState();
-  const tasks = state.tasks || [];
-  if(!tasks.length) return 0;
-  const sum = tasks.reduce((a,t)=> a + computePercent(t), 0);
-  return Math.round(sum / tasks.length);
+/* Delete */
+function deleteTask(btn) {
+    btn.parentElement.remove();
+    saveTasks();
 }
 
-function toggleComplete(id){
-  const state = getState();
-  const t = state.tasks.find(x=>x.id===id);
-  if(!t) return;
-  if(computePercent(t)===100){
-    // mark pending
-    if(t.subtasks && t.subtasks.length) t.subtasks = t.subtasks.map(s=>({...s,done:false}));
-    t.manualPercent = 0;
-    t.completed = false;
-  } else {
-    if(t.subtasks && t.subtasks.length) t.subtasks = t.subtasks.map(s=>({...s,done:true}));
-    else t.manualPercent = 100;
-    t.completed = true;
-    // award xp
-    awardXP(10);
-    confettiBurst();
-  }
-  saveAndRender(state);
+/* Save */
+function saveTasks() {
+    const tasks = [];
+
+    document.querySelectorAll("#taskList li").forEach(li => {
+        tasks.push({
+            text: li.querySelector("span").innerText,
+            completed: li.classList.contains("completed")
+        });
+    });
+
+    localStorage.setItem("todoData", JSON.stringify(tasks));
 }
 
-function deleteTask(id){
-  const state = getState();
-  state.tasks = state.tasks.filter(t=>t.id!==id);
-  saveAndRender(state);
+/* Load */
+window.onload = function() {
+    const saved = JSON.parse(localStorage.getItem("todoData") || "[]");
+    saved.forEach(t => createTask(t.text, t.completed));
+};
+
+/* Reward Popup */
+function showReward() {
+    const reward = document.getElementById("reward");
+    reward.style.opacity = 1;
+    reward.style.transform = "translateY(0)";
+    setTimeout(() => reward.style.opacity = 0, 2000);
 }
-
-function editTask(id){
-  const state = getState();
-  const t = state.tasks.find(x=>x.id===id);
-  if(!t) return;
-  const newTitle = prompt('Edit title', t.title);
-  if(newTitle === null) return;
-  t.title = newTitle.trim() || t.title;
-  const newNotes = prompt('Notes', t.notes||'');
-  if(newNotes !== null) t.notes = newNotes;
-  const mp = prompt('Manual percent (leave blank for auto)', t.manualPercent != null ? t.manualPercent : '');
-  t.manualPercent = mp === '' || mp === null ? null : clamp(parseInt(mp||0),0,100);
-  saveAndRender(state);
-}
-
-/* Save helper */
-function saveAndRender(state){
-  saveUser(state);
-  renderAll();
-}
-
-/* ---------- XP, streaks, badges ---------- */
-function awardXP(n){
-  const state = getState();
-  state.xp = (state.xp || 0) + n;
-  // badge unlocks
-  if(state.xp >= 50 && !state.badges.includes('Starter')) state.badges.push('Starter');
-  if(state.xp >= 200 && !state.badges.includes('Achiever')) state.badges.push('Achiever');
-  state.lastActive = new Date().toISOString();
-  // update streak: if lastActive was yesterday -> increment
-  updateStreak(true);
-  saveAndRender(state);
-}
-
-function updateStreak(triggerSave=false){
-  const state = getState();
-  const last = state.lastActive ? new Date(state.lastActive) : null;
-  const today = new Date();
-  const todayStr = today.toDateString();
-  const lastStr = last ? last.toDateString() : null;
-  if(!last || lastStr !== todayStr){
-    // if last is yesterday => increment
-    if(last){
-      const yesterday = new Date(); yesterday.setDate(today.getDate()-1);
-      if(last.toDateString() === yesterday.toDateString()) state.streak = (state.streak||0) + 1;
-      else state.streak = 1;
-    } else {
-      state.streak = 1;
-    }
-    state.lastActive = new Date().toISOString();
-    if(triggerSave) saveUser(state);
-  }
-  qs('#streakCount').textContent = state.streak || 0;
-  qs('#pfStreak').textContent = state.streak || 0;
-}
-
-/* ---------- Badges ---------- */
-function renderBadges(){
-  const state = getState();
-  const area = qs('#badgesArea');
-  if(!area) return;
-  area.innerHTML = '';
-  const all = [
-    {id:'Starter', title:'Starter (50 XP)'},
-    {id:'Achiever', title:'Achiever (200 XP)'},
-    {id:'Master', title:'Master (500 XP)'}
-  ];
-  all.forEach(b => {
-    const unlocked = state.badges && state.badges.includes(b.id) || (state.xp||0) >= (b.id==='Starter'?50: b.id==='Achiever'?200:500);
-    const d = document.createElement('div');
-    d.className = 'badge';
-    d.style.padding = '12px'; d.style.borderRadius='10px'; d.style.background = unlocked ? 'linear-gradient(90deg,#7c3aed,#06b6d4)' : 'rgba(255,255,255,0.02)';
-    d.style.color = unlocked ? '#000' : 'var(--muted)';
-    d.innerHTML = `<div style="font-weight:700">${b.title}</div><div class="small">${unlocked?'Unlocked':'Locked'}</div>`;
-    area.appendChild(d);
-  });
-}
-
-/* ---------- Confetti (simple) ---------- */
-function confettiBurst(){
-  const layer = qs('#confettiLayer');
-  for(let i=0;i<40;i++){
-    const el = document.createElement('div');
-    el.style.position='absolute';
-    el.style.left = (50 + (Math.random()*60-30)) + '%';
-    el.style.top = (30 + Math.random()*40) + '%';
-    el.style.width = '8px';
-    el.style.height = '14px';
-    el.style.background = randomColor();
-    el.style.transform = `rotate(${Math.random()*360}deg)`;
-    el.style.opacity = '0.95';
-    el.style.borderRadius = '3px';
-    el.style.transition = 'transform 1200ms cubic-bezier(.2,.8,.2,1), opacity 1200ms';
-    layer.appendChild(el);
-    setTimeout(()=> {
-      el.style.transform = `translateY(${300 + Math.random()*200}px) rotate(${Math.random()*720}deg)`;
-      el.style.opacity = 0;
-    }, 20);
-    setTimeout(()=> el.remove(), 1400);
-  }
-}
-
-/* ---------- Chatbot (local simulated + task generator) ---------- */
-qs('#chatSend').addEventListener('click', () => {
-  const q = qs('#chatInput').value.trim();
-  if(!q) return;
-  appendChat('You', q, 'user');
-  qs('#chatInput').value = '';
-  setTimeout(()=> {
-    const res = localAI(q);
-    appendChat('Assistant', res, 'bot');
-    // if assistant suggests tasks in a JSON-like bullet list, try to parse and add
-    if(res.startsWith('[TASKS]')) {
-      // format: [TASKS]\nTask 1; Task 2; ...
-      const body = res.slice(7).trim();
-      const items = body.split(';').map(s=>s.trim()).filter(Boolean);
-      const state = getState();
-      items.forEach(it => {
-        state.tasks.unshift({ id: uid('t'), title: it, createdAt: nowISO(), completed:false, subtasks:[], priority:'medium' });
-      });
-      saveAndRender(state);
-      appendChat('Assistant', 'I added the suggested tasks to your list ✅', 'bot');
-    }
-  }, 420);
-});
-
-function appendChat(who, text, cls){
-  const m = qs('#chatMessages');
-  const p = document.createElement('p');
-  p.innerHTML = `<strong>${who}:</strong> ${escapeHtml(text)}`;
-  p.className = cls === 'bot' ? 'msg-bot' : 'msg-user';
-  m.appendChild(p);
-  m.scrollTop = m.scrollHeight;
-}
-
-function localAI(q){
-  const s = q.toLowerCase();
-  if(s.includes('plan') || s.includes('create tasks') || s.includes('study')) {
-    // return task suggestions encoded
-    const suggestions = [
-      'Read Chapter 1 and take notes',
-      'Solve 10 practice problems',
-      'Create summary flashcards',
-      'Revise previous topics'
-    ];
-    return '[TASKS]\n' + suggestions.join('; ');
-  }
-  if(s.includes('hello')||s.includes('hi')) return 'Hello! I can help you plan tasks. Try: "Create 4 tasks to learn React"';
-  if(s.includes('tips')) return 'Break tasks into 25-50 minute focused blocks. Prioritize 3 tasks per day.';
-  return "Nice question — try asking 'Create 5 tasks to learn SQL' or 'Give productivity tips'.";
-}
-
-/* ---------- Helper functions ---------- */
-function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
-function priorityVal(p){ return p==='high'?3: p==='medium'?2:1 }
-function randomColor(){ const c=['#7c3aed','#06b6d4','#ffb86b','#ff6b6b','#60f2a2']; return c[Math.floor(Math.random()*c.length)] }
-function clamp01(n){ return Math.max(0, Math.min(1, n)) }
-
-/* ---------- Small utilities ---------- */
-function debounce(fn, wait){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), wait); } }
-
-/* ---------- Quotes ---------- */
-const QUOTES = [
-  "Plan your work and work your plan.",
-  "Small progress is still progress.",
-  "Focus on what matters most today.",
-  "Consistency compounds into results."
-];
-function updateQuote(){ qs('#dailyQuote').textContent = QUOTES[(new Date().getDate()) % QUOTES.length]; }
-
-/* ---------- Profile render ---------- */
-function renderProfile(){
-  const state = getState();
-  qs('#pfUser').textContent = currentUser() || 'Guest';
-  qs('#pfXP').textContent = state.xp || 0;
-  qs('#pfStreak').textContent = state.streak || 0;
-}
-
-/* ---------- render badges called earlier ---------- */
-
-/* ---------- Utility to get accent colors ---------- */
-function getAccent(i){ return i===0? '--accent-a' : '--accent-b' } // placeholder used in inline style
-
-/* ---------- Init actions ---------- */
-(function initial(){
-  // If no user, quick prompt
-  if(!currentUser()){
-    const n = prompt('Enter username (local):', 'Guest');
-    if(n) setUser(n);
-  }
-  updateActiveNav();
-  renderAll();
-})();
-
 </script>
+
 </body>
 </html>
