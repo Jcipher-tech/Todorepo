@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>To DO APP</title>
+<title>Premium To-Do App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -14,53 +14,52 @@ body {
     overflow-x: hidden;
 }
 
-/* Floating Animated Shapes */
+/* Floating gradient shapes */
 .shape {
     position: absolute;
     width: 300px;
     height: 300px;
-    background: linear-gradient(135deg, #5b2bff, #ff2bd8);
+    background: linear-gradient(135deg, #7928ff, #ff2bd8);
     filter: blur(120px);
-    opacity: 0.6;
-    animation: float 15s infinite ease-in-out alternate;
+    opacity: 0.4;
+    animation: float 12s infinite alternate;
 }
-
-#shape1 { top: -100px; left: -50px; }
-#shape2 { bottom: -100px; right: -80px; animation-delay: 4s; }
+#shape1 { top: -80px; left: -50px; }
+#shape2 { bottom: -80px; right: -50px; animation-delay: 3s; }
 
 @keyframes float {
-    from { transform: translateY(0px) scale(1); }
-    to { transform: translateY(60px) scale(1.2); }
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(40px) scale(1.1); }
 }
 
-/* Container */
+/* Main container */
 .container {
     width: 90%;
-    max-width: 450px;
+    max-width: 420px;
     margin: 120px auto;
     padding: 25px;
     background: rgba(255,255,255,0.05);
     border-radius: 20px;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 0 25px rgba(138, 0, 255, 0.5);
-    animation: fadeIn 1s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 0 20px rgba(141,0,255,0.5);
+    animation: fadeIn 0.7s ease;
 }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } }
 
-/* Heading */
 h1 {
     text-align: center;
     font-size: 32px;
-    background: linear-gradient(90deg, #a855f7, #06b6d4);
+    background: linear-gradient(90deg, #c084fc, #22d3ee);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* Input Section */
+/* Input area */
 .inputRow {
     display: flex;
     gap: 10px;
+    margin-bottom: 15px;
 }
 input {
     flex: 1;
@@ -68,35 +67,32 @@ input {
     border-radius: 10px;
     border: none;
     outline: none;
+    font-size: 16px;
 }
 button {
-    padding: 12px 18px;
+    padding: 12px 20px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     background: linear-gradient(135deg, #9333ea, #3b82f6);
     color: white;
-    transition: 0.3s;
+    transition: 0.3s ease;
+    font-size: 18px;
 }
-button:hover {
-    transform: scale(1.05);
-}
+button:hover { transform: scale(1.07); }
 
-/* Task list */
-ul {
-    margin-top: 20px;
-    padding: 0;
-}
+/* Task List */
+ul { padding: 0; margin-top: 10px; }
 li {
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.09);
+    list-style-type: none;
     padding: 12px;
     margin-bottom: 10px;
-    border-radius: 10px;
-    list-style: none;
+    border-radius: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    animation: slideIn 0.4s ease;
+    animation: slideIn 0.3s ease;
 }
 @keyframes slideIn { from {opacity: 0; transform: translateX(20px);} }
 
@@ -105,17 +101,24 @@ li.completed {
     opacity: 0.6;
 }
 
-/* Reward pop-up */
+.deleteBtn {
+    background: #ef4444;
+    padding: 8px 13px;
+    border-radius: 8px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
 #reward {
     position: fixed;
     top: 20px;
     right: 20px;
+    background: #4ade80;
     padding: 12px 20px;
-    background: linear-gradient(90deg, #22c55e, #4ade80);
     color: black;
-    border-radius: 12px;
+    border-radius: 10px;
     font-weight: bold;
-    box-shadow: 0 0 10px #22c55e;
     opacity: 0;
     transform: translateY(-20px);
     transition: 0.4s ease;
@@ -125,7 +128,7 @@ li.completed {
 
 <body>
 
-<!-- Animated gradient shapes -->
+<!-- Floating shapes -->
 <div id="shape1" class="shape"></div>
 <div id="shape2" class="shape"></div>
 
@@ -133,36 +136,44 @@ li.completed {
     <h1>My To-Do List</h1>
 
     <div class="inputRow">
-        <input type="text" id="taskInput" placeholder="Add new task...">
-        <button onclick="addTask()">+</button>
+        <input type="text" id="taskInput" placeholder="Add a task...">
+        <button id="addBtn">+</button>
     </div>
 
     <ul id="taskList"></ul>
 </div>
 
-<div id="reward">🎉 Great job! Task Completed!</div>
+<div id="reward">🎉 Task Completed!</div>
 
 <script>
-// Load tasks on start
-document.addEventListener("DOMContentLoaded", loadTasks);
+/* MAIN FIX: Ensure event listener works */
+document.getElementById("addBtn").addEventListener("click", addTask);
 
+/* Enable Enter key */
+document.getElementById("taskInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") addTask();
+});
+
+/* Add Task */
 function addTask() {
-    let input = document.getElementById("taskInput");
-    let taskText = input.value.trim();
-    if (!taskText) return;
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
 
-    createTask(taskText);
+    if (!text) return; // ignore empty tasks
+
+    createTask(text);
     saveTasks();
     input.value = "";
 }
 
+/* Create Task Element */
 function createTask(text, completed = false) {
-    let ul = document.getElementById("taskList");
-    let li = document.createElement("li");
+    const ul = document.getElementById("taskList");
 
+    const li = document.createElement("li");
     li.innerHTML = `
         <span onclick="toggleTask(this)" style="cursor:pointer;">${text}</span>
-        <button onclick="deleteTask(this)" style="background:#ef4444;">X</button>
+        <button class="deleteBtn" onclick="deleteTask(this)">X</button>
     `;
 
     if (completed) li.classList.add("completed");
@@ -170,42 +181,47 @@ function createTask(text, completed = false) {
     ul.appendChild(li);
 }
 
+/* Mark Complete */
 function toggleTask(span) {
-    let li = span.parentElement;
+    const li = span.parentElement;
     li.classList.toggle("completed");
     saveTasks();
 
     if (li.classList.contains("completed")) showReward();
 }
 
+/* Delete */
 function deleteTask(btn) {
     btn.parentElement.remove();
     saveTasks();
 }
 
+/* Save */
 function saveTasks() {
-    let tasks = [];
-    document.querySelectorAll("li").forEach(li => {
+    const tasks = [];
+
+    document.querySelectorAll("#taskList li").forEach(li => {
         tasks.push({
             text: li.querySelector("span").innerText,
             completed: li.classList.contains("completed")
         });
     });
+
     localStorage.setItem("todoData", JSON.stringify(tasks));
 }
 
-function loadTasks() {
-    let tasks = JSON.parse(localStorage.getItem("todoData") || "[]");
-    tasks.forEach(t => createTask(t.text, t.completed));
-}
+/* Load */
+window.onload = function() {
+    const saved = JSON.parse(localStorage.getItem("todoData") || "[]");
+    saved.forEach(t => createTask(t.text, t.completed));
+};
 
+/* Reward Popup */
 function showReward() {
-    let reward = document.getElementById("reward");
-    reward.style.opacity = "1";
+    const reward = document.getElementById("reward");
+    reward.style.opacity = 1;
     reward.style.transform = "translateY(0)";
-    setTimeout(() => {
-        reward.style.opacity = "0";
-    }, 2000);
+    setTimeout(() => reward.style.opacity = 0, 2000);
 }
 </script>
 
