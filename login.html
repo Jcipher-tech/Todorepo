@@ -2,226 +2,330 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Premium To-Do App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Advanced To-Do WebApp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+/* ---------------------------------------------------
+   GLOBAL DESIGN
+-----------------------------------------------------*/
 body {
     margin: 0;
     font-family: "Poppins", sans-serif;
-    background: #020202;
+    background: #020614;
     color: white;
     overflow-x: hidden;
 }
 
-/* Floating gradient shapes */
-.shape {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(135deg, #7928ff, #ff2bd8);
-    filter: blur(120px);
-    opacity: 0.4;
-    animation: float 12s infinite alternate;
-}
-#shape1 { top: -80px; left: -50px; }
-#shape2 { bottom: -80px; right: -50px; animation-delay: 3s; }
-
-@keyframes float {
-    from { transform: translateY(0) scale(1); }
-    to { transform: translateY(40px) scale(1.1); }
+section {
+    display: none;
+    padding: 50px;
 }
 
-/* Main container */
-.container {
-    width: 90%;
-    max-width: 420px;
-    margin: 120px auto;
-    padding: 25px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 0 20px rgba(141,0,255,0.5);
-    animation: fadeIn 0.7s ease;
-}
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } }
-
-h1 {
-    text-align: center;
-    font-size: 32px;
-    background: linear-gradient(90deg, #c084fc, #22d3ee);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.active {
+    display: block;
 }
 
-/* Input area */
-.inputRow {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-input {
-    flex: 1;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-}
-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: linear-gradient(135deg, #9333ea, #3b82f6);
-    color: white;
-    transition: 0.3s ease;
-    font-size: 18px;
-}
-button:hover { transform: scale(1.07); }
-
-/* Task List */
-ul { padding: 0; margin-top: 10px; }
-li {
-    background: rgba(255,255,255,0.09);
-    list-style-type: none;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    animation: slideIn 0.3s ease;
-}
-@keyframes slideIn { from {opacity: 0; transform: translateX(20px);} }
-
-li.completed {
-    text-decoration: line-through;
-    opacity: 0.6;
-}
-
-.deleteBtn {
-    background: #ef4444;
-    padding: 8px 13px;
-    border-radius: 8px;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#reward {
+/* NAVIGATION */
+nav {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #4ade80;
-    padding: 12px 20px;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    border-bottom: 1px solid cyan;
+    z-index: 99;
+}
+
+nav button {
+    background: transparent;
+    border: 1px solid cyan;
+    padding: 10px 20px;
+    color: cyan;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+nav button:hover {
+    background: cyan;
     color: black;
+}
+
+/* FLOATING RIBBON */
+.ribbon {
+    width: 300px;
+    height: 40px;
+    position: absolute;
+    top: 20%;
+    left: -100px;
+    background: linear-gradient(45deg, #00ffff, #00ff88);
+    border-radius: 50px;
+    filter: drop-shadow(0 0 10px cyan);
+    animation: floatRibbon 8s linear infinite;
+}
+
+@keyframes floatRibbon {
+    0% { transform: translateX(0) rotate(0deg); }
+    50% { transform: translateX(140vw) rotate(8deg); }
+    100% { transform: translateX(0) rotate(0deg); }
+}
+
+/* PAGE HEADINGS */
+h1 {
+    font-size: 40px;
+    color: cyan;
+    text-shadow: 0 0 10px cyan;
+}
+
+/* INPUTS & BUTTONS */
+input, textarea, select {
+    padding: 10px;
+    width: 300px;
+    border-radius: 8px;
+    border: 1px solid cyan;
+    background: transparent;
+    color: white;
+}
+
+button.action {
+    margin-top: 10px;
+    background: cyan;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* CHATBOT */
+.chat-box {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 20px;
+    width: 400px;
+}
+
+/* TODO LIST */
+.task {
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(0,255,255,0.1);
+    border: 1px solid cyan;
+    border-radius: 8px;
+}
+.task.completed {
+    background: rgba(0,255,0,0.2);
+    text-decoration: line-through;
+}
+
+/* ALARM */
+.alarm-box {
+    padding: 20px;
+    width: 300px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+}
+
+/* FEED / COMMUNITY GALLERY */
+.gallery img, .gallery video {
+    width: 200px;
+    margin: 10px;
     border-radius: 10px;
-    font-weight: bold;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: 0.4s ease;
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<!-- Floating shapes -->
-<div id="shape1" class="shape"></div>
-<div id="shape2" class="shape"></div>
+<!-- NAVIGATION -->
+<nav>
+    <button onclick="show('home')">Home</button>
+    <button onclick="show('login')">Login</button>
+    <button onclick="show('todo')">To-Do</button>
+    <button onclick="show('dashboard')">Dashboard</button>
+    <button onclick="show('alarm')">Alarm</button>
+    <button onclick="show('chatbot')">Chatbot</button>
+    <button onclick="show('faq')">FAQ</button>
+    <button onclick="show('feedback')">Feedback</button>
+    <button onclick="show('technews')">Tech News</button>
+    <button onclick="show('music')">Music</button>
+    <button onclick="show('linkedin')">LinkedIn</button>
+    <button onclick="show('community')">Community</button>
+</nav>
 
-<div class="container">
-    <h1>My To-Do List</h1>
+<!-- FLOATING RIBBON -->
+<div class="ribbon"></div>
 
-    <div class="inputRow">
-        <input type="text" id="taskInput" placeholder="Add a task...">
-        <button id="addBtn">+</button>
+<!-- ---------------------------------------------------
+     HOME
+----------------------------------------------------- -->
+<section id="home" class="active">
+    <h1>Welcome to the Ultimate To-Do WebApp</h1>
+    <p>Stay productive. Stay motivated. Stay rewarded.</p>
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+    <h1>Login</h1>
+    <input type="email" placeholder="Enter your email"><br>
+    <button class="action">Connect with Google</button>
+</section>
+
+<!-- TODO LIST -->
+<section id="todo">
+    <h1>Your Tasks</h1>
+    <input id="taskInput" placeholder="Enter task">
+    <button class="action" onclick="addTask()">Add Task</button>
+
+    <div id="taskList"></div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+    <h1>Dashboard</h1>
+    <p>Total Tasks Completed: <span id="completedCount">0</span></p>
+    <p>Rewards Earned: <span id="rewards">0</span> ⭐</p>
+</section>
+
+<!-- ALARM -->
+<section id="alarm">
+    <h1>Alarm Clock</h1>
+    <div class="alarm-box">
+        <input id="alarmTime" type="time">
+        <button class="action" onclick="setAlarm()">Set Alarm</button>
+        <p id="alarmStatus"></p>
     </div>
+</section>
 
-    <ul id="taskList"></ul>
-</div>
+<!-- CHATBOT -->
+<section id="chatbot">
+    <h1>AI Chatbot</h1>
+    <div class="chat-box">
+        <textarea id="chatInput" placeholder="Ask something..."></textarea><br>
+        <button class="action" onclick="fakeReply()">Send</button>
+        <p id="chatReply"></p>
+    </div>
+</section>
 
-<div id="reward">🎉 Task Completed!</div>
+<!-- FAQ -->
+<section id="faq">
+    <h1>FAQs</h1>
+    <p>Q: Is this app free?<br>A: Yes.</p>
+    <p>Q: Will my data be safe?<br>A: 100% safe.</p>
+</section>
 
+<!-- FEEDBACK -->
+<section id="feedback">
+    <h1>Feedback</h1>
+    <textarea placeholder="Your feedback..."></textarea><br>
+    <button class="action">Submit</button>
+</section>
+
+<!-- TECH NEWS -->
+<section id="technews">
+    <h1>Tech News</h1>
+    <button class="action" onclick="loadNews()">Load Latest News</button>
+    <div id="news"></div>
+</section>
+
+<!-- MUSIC -->
+<section id="music">
+    <h1>Music While You Work</h1>
+    <ul>
+        <li><a href="https://www.youtube.com/watch?v=2Vv-BfVoq4g" target="_blank">English Playlist</a></li>
+        <li><a href="https://www.youtube.com/watch?v=8ybW48rKBME" target="_blank">Hindi Playlist</a></li>
+        <li><a href="https://www.youtube.com/watch?v=Z-7E8p6R0Yg" target="_blank">Marathi Playlist</a></li>
+    </ul>
+</section>
+
+<!-- LINKEDIN -->
+<section id="linkedin">
+    <h1>Grow Your Network</h1>
+    <button class="action" onclick="window.open('https://www.linkedin.com','_blank')">Open LinkedIn</button>
+</section>
+
+<!-- COMMUNITY -->
+<section id="community">
+    <h1>Community Posts</h1>
+    <input type="file" accept="image/*,video/*" onchange="uploadMedia(event)">
+    <div class="gallery" id="gallery"></div>
+</section>
+
+<!-- ---------------------------------------------------
+     SCRIPT
+----------------------------------------------------- -->
 <script>
-/* MAIN FIX: Ensure event listener works */
-document.getElementById("addBtn").addEventListener("click", addTask);
+function show(id) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
 
-/* Enable Enter key */
-document.getElementById("taskInput").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") addTask();
-});
+/* TODO SYSTEM */
+let completed = 0;
+let rewards = 0;
 
-/* Add Task */
 function addTask() {
-    const input = document.getElementById("taskInput");
-    const text = input.value.trim();
+    const val = document.getElementById("taskInput").value.trim();
+    if (!val) return;
 
-    if (!text) return; // ignore empty tasks
+    const div = document.createElement("div");
+    div.className = "task";
+    div.innerHTML = val;
+    div.onclick = () => {
+        div.classList.toggle("completed");
+        if (div.classList.contains("completed")) {
+            completed++;
+            rewards += 5;
+        } else {
+            completed--;
+            rewards -= 5;
+        }
+        document.getElementById("completedCount").innerText = completed;
+        document.getElementById("rewards").innerText = rewards;
+    };
 
-    createTask(text);
-    saveTasks();
-    input.value = "";
+    document.getElementById("taskList").appendChild(div);
+    document.getElementById("taskInput").value = "";
 }
 
-/* Create Task Element */
-function createTask(text, completed = false) {
-    const ul = document.getElementById("taskList");
-
-    const li = document.createElement("li");
-    li.innerHTML = `
-        <span onclick="toggleTask(this)" style="cursor:pointer;">${text}</span>
-        <button class="deleteBtn" onclick="deleteTask(this)">X</button>
-    `;
-
-    if (completed) li.classList.add("completed");
-
-    ul.appendChild(li);
+/* ALARM */
+function setAlarm() {
+    const time = document.getElementById("alarmTime").value;
+    document.getElementById("alarmStatus").innerText = "Alarm set!";
+    const alarm = new Audio("https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav");
+    setInterval(() => {
+        const now = new Date();
+        if (now.toTimeString().slice(0,5) === time) alarm.play();
+    }, 1000);
 }
 
-/* Mark Complete */
-function toggleTask(span) {
-    const li = span.parentElement;
-    li.classList.toggle("completed");
-    saveTasks();
-
-    if (li.classList.contains("completed")) showReward();
+/* CHATBOT */
+function fakeReply() {
+    const reply = "This is a placeholder AI. Real AI can be added.";
+    document.getElementById("chatReply").innerText = reply;
 }
 
-/* Delete */
-function deleteTask(btn) {
-    btn.parentElement.remove();
-    saveTasks();
+/* TECH NEWS */
+function loadNews() {
+    document.getElementById("news").innerHTML =
+        "<p>• Apple releases new AI chipset<br>• Google announces Gemini update<br>• India launches supercomputing initiative</p>";
 }
 
-/* Save */
-function saveTasks() {
-    const tasks = [];
-
-    document.querySelectorAll("#taskList li").forEach(li => {
-        tasks.push({
-            text: li.querySelector("span").innerText,
-            completed: li.classList.contains("completed")
-        });
-    });
-
-    localStorage.setItem("todoData", JSON.stringify(tasks));
-}
-
-/* Load */
-window.onload = function() {
-    const saved = JSON.parse(localStorage.getItem("todoData") || "[]");
-    saved.forEach(t => createTask(t.text, t.completed));
-};
-
-/* Reward Popup */
-function showReward() {
-    const reward = document.getElementById("reward");
-    reward.style.opacity = 1;
-    reward.style.transform = "translateY(0)";
-    setTimeout(() => reward.style.opacity = 0, 2000);
+/* COMMUNITY UPLOAD */
+function uploadMedia(event) {
+    const file = event.target.files[0];
+    const url = URL.createObjectURL(file);
+    const media = file.type.startsWith("video") ?
+        `<video src="${url}" controls></video>` :
+        `<img src="${url}">`;
+    document.getElementById("gallery").innerHTML += media;
 }
 </script>
 
